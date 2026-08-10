@@ -98,7 +98,10 @@ const { id, label, itemNoun, count } = Astro.props;
 
   .carousel__track > :global(*) {
     flex: 0 0 100%;
-    scroll-snap-align: center;
+    /* start, not center: with full-width slides the two look identical, but
+       start makes the scroll offset of slide N simply its distance from slide
+       0, which is what the script below relies on. */
+    scroll-snap-align: start;
   }
 
   .carousel__controls {
@@ -169,13 +172,41 @@ const { id, label, itemNoun, count } = Astro.props;
       "(prefers-reduced-motion: reduce)",
     ).matches;
 
+    let snapTimer: number | undefined;
+
+    function restoreSnap() {
+      track!.style.scrollSnapType = "";
+    }
+
     function go(to: number, announce = true) {
       index = Math.max(0, Math.min(to, slides.length - 1));
-      slides[index].scrollIntoView({
-        behavior: reduceMotion ? "auto" : "smooth",
-        block: "nearest",
-        inline: "center",
-      });
+
+      // Measuring from slide 0 cancels out the track's padding and any
+      // offsetParent difference, and accounts for the flex gap.
+      const left = slides[index].offsetLeft - slides[0].offsetLeft;
+
+      if (reduceMotion) {
+        track!.scrollLeft = left;
+      } else {
+        // `scroll-snap-type: mandatory` cancels programmatic smooth scrolls:
+        // the scroll begins and is immediately snapped back to where it
+        // started, so the dots and the live region advanced while the slide
+        // itself never moved. Lifting snap for the duration of the animation
+        // fixes it; snapping is restored as soon as the scroll settles, so
+        // touch and trackpad still snap normally.
+        track!.style.scrollSnapType = "none";
+        track!.scrollTo({ left, behavior: "smooth" });
+
+        window.clearTimeout(snapTimer);
+        if ("onscrollend" in window) {
+          track!.addEventListener("scrollend", restoreSnap, { once: true });
+          // Belt and braces: scrollend does not fire if the scroll is a no-op.
+          snapTimer = window.setTimeout(restoreSnap, 1000);
+        } else {
+          snapTimer = window.setTimeout(restoreSnap, 600);
+        }
+      }
+
       sync(announce);
     }
 

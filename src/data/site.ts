@@ -58,8 +58,12 @@ export const services = [
   },
 ];
 
-/* The Figma paginator shows four testimonials but only defines this one.
-   The remaining three need real copy from the practice before launch. */
+/* The Figma paginator shows four of each; the file defines one of each. The
+   rest are placeholders so the carousels can be built and tested at their real
+   length. Every placeholder is flagged, and anything flagged renders a visible
+   badge -- so none of this can reach production unnoticed. Replace the content
+   and drop the `placeholder` flag as real material arrives. */
+
 export const testimonials = [
   {
     quote:
@@ -67,13 +71,51 @@ export const testimonials = [
     author: "Joseph L.",
     rating: 5,
   },
+  {
+    quote:
+      "Placeholder review. Replace with a real patient review before launch — ideally one that mentions a different service from the others, so the four together cover the range of care.",
+    author: "Patient name",
+    rating: 5,
+    placeholder: true,
+  },
+  {
+    quote:
+      "Placeholder review. Replace with a real patient review before launch — a first-visit or new-patient experience would balance the set well.",
+    author: "Patient name",
+    rating: 5,
+    placeholder: true,
+  },
+  {
+    quote:
+      "Placeholder review. Replace with a real patient review before launch — something about the practice itself, rather than a single procedure.",
+    author: "Patient name",
+    rating: 5,
+    placeholder: true,
+  },
 ];
 
-/* Likewise: four dots in the hero paginator, one photo in the file. */
 export const heroPhotos = [
   {
     src: "/images/office-exterior.jpg",
     alt: "The Meadowbrook Dental building on Five Points Drive, with parking directly outside the entrance.",
     caption: "3421 Five Points Drive in Auburn Hills, MI",
+  },
+  {
+    src: "/images/placeholder-photo-2.svg",
+    alt: "Placeholder — a photo of the practice will replace this.",
+    caption: "Reception or waiting area",
+    placeholder: true,
+  },
+  {
+    src: "/images/placeholder-photo-3.svg",
+    alt: "Placeholder — a photo of the practice will replace this.",
+    caption: "A treatment room",
+    placeholder: true,
+  },
+  {
+    src: "/images/placeholder-photo-4.svg",
+    alt: "Placeholder — a photo of the practice will replace this.",
+    caption: "The team",
+    placeholder: true,
   },
 ];

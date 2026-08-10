@@ -36,6 +36,9 @@ import { testimonials } from "../data/site";
                 Rated {item.rating} out of 5
               </span>
             </p>
+            {item.placeholder && (
+              <span class="placeholder-badge">Placeholder</span>
+            )}
             <blockquote>
               <p>{item.quote}</p>
             </blockquote>

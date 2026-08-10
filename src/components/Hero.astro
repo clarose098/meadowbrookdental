@@ -38,7 +38,12 @@ import { site, heroPhotos } from "../data/site";
               aria-label={`${i + 1} of ${heroPhotos.length}`}
             >
               <img src={photo.src} alt={photo.alt} width="629" height="362" />
-              <figcaption>{photo.caption}</figcaption>
+              <figcaption>
+                {photo.placeholder && (
+                  <span class="placeholder-badge">Placeholder</span>
+                )}
+                <span>{photo.caption}</span>
+              </figcaption>
             </figure>
           ))
         }
@@ -95,6 +100,10 @@ import { site, heroPhotos } from "../data/site";
   }
 
   .hero__slide figcaption {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
     font-weight: 700;
     color: var(--teal);
     text-align: center;

@@ -148,6 +148,23 @@ svg {
   padding-block: clamp(3rem, 8vw, 6.5rem);
 }
 
+/* Marks content that is standing in for something the practice still owes us.
+   Deliberately loud -- its job is to be impossible to miss in a review, so
+   placeholder copy cannot quietly reach production. Remove the `placeholder`
+   flag in src/data/site.ts and the badge disappears with it. */
+.placeholder-badge {
+  align-self: center;
+  display: inline-block;
+  padding: 0.2rem 0.6rem;
+  border: 2px dashed currentColor;
+  border-radius: 4px;
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
 .eyebrow {
   /* 19px, not the 18px in Figma. At 18px bold this is 13.5pt, just under
      WCAG's 14pt-bold large-text threshold, which would force 4.5:1 and rule

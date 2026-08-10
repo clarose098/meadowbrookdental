@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 629 362" role="img" aria-label="Placeholder">
+  <rect width="629" height="362" fill="#f3eee5"/>
+  <rect x="8" y="8" width="613" height="346" fill="none" stroke="#1a787f" stroke-width="2" stroke-dasharray="10 8" opacity="0.55"/>
+  <g fill="none" stroke="#1a787f" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" opacity="0.8">
+    <path d="M247 148h26l10-14h44l10 14h26a12 12 0 0 1 12 12v66a12 12 0 0 1-12 12H247a12 12 0 0 1-12-12v-66a12 12 0 0 1 12-12Z"/>
+    <circle cx="314.5" cy="193" r="27"/>
+  </g>
+  <text x="314.5" y="272" text-anchor="middle" font-family="Georgia, serif" font-size="26" font-weight="bold" fill="#363636">Photo 2</text>
+  <text x="314.5" y="300" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="16" fill="#5c5c5c">Placeholder &#8212; awaiting a photo from the practice</text>
+</svg>
