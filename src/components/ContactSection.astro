@@ -195,11 +195,7 @@ const FormHeading = `h${headingLevel + 1}` as "h2" | "h3";
     align-items: start;
   }
 
-  /* The icon is a pseudo-element, so the <dl> keeps a valid dt/dd structure.
-     border-radius clips it to a circle: the emergency icon is a PNG with an
-     opaque white square baked into its corners, and since every one of these
-     chips is a circle inscribed exactly in its 48px box, the clip removes
-     those corners precisely and is harmless to the SVGs. */
+  /* The icon is a pseudo-element, so the <dl> keeps a valid dt/dd structure. */
   .details__row::before {
     content: "";
     grid-column: 1;
@@ -222,14 +218,13 @@ const FormHeading = `h${headingLevel + 1}` as "h2" | "h3";
   .details__row--email::before {
     background-image: url("/icons/detail-2.svg");
   }
+  /* This one ships as the glyph alone -- the strokes outlined into a single
+     filled path -- so its disc is drawn here rather than baked into the file.
+     The other three carry theirs inside the SVG. */
   .details__row--emergency::before {
-    /* PNG, not SVG, and deliberately so. Every SVG export of this node comes
-       back byte-identical and contains only the outer circle -- the medical
-       cross inside it does not survive Figma's SVG export, though it is
-       present in the PNG render. This is a 4x PNG so it stays crisp at 48px.
-       Swap back to detail-3.svg once the layer is fixed in Figma;
-       detail-3.svg is still in the repo and is the incomplete version. */
-    background-image: url("/icons/detail-3.png");
+    background-color: var(--chip);
+    background-image: url("/icons/detail-3.svg");
+    background-size: 24px 24px;
   }
   .details__row--hours::before {
     background-image: url("/icons/detail-4.svg");

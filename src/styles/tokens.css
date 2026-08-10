@@ -56,6 +56,9 @@
      brand teal everywhere it is used at that threshold. --hero-to is already
      light enough (3.05:1) and keeps its pale cyan. */
   --cream: #fbf7f0;
+  /* The pale disc behind the contact and service icons. Baked into most of
+     those exported SVGs; named here for the one that ships glyph-only. */
+  --chip: #e0eef0;
   --cream-dim: var(--cream); /* was #f3eee5 */
   --hero-from: var(--cream); /* was #f4eee4 */
   --hero-via: var(--cream);  /* was #edf4ef */
