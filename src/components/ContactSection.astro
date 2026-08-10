@@ -100,6 +100,39 @@ const FormHeading = `h${headingLevel + 1}` as "h2" | "h3";
           </label>
         </p>
 
+        {/* First in the form, ahead of the name fields, for two reasons: it is
+            the routing question the front desk actually needs, and it puts the
+            emergency notice at the top rather than four fields down. A form is
+            asynchronous — nobody may read it until Monday — so anyone in real
+            pain has to be pointed at the phone before they start filling it in.
+            That is also why there is no "urgent" option in the list below:
+            offering one would imply this is a valid channel for urgent care. */}
+        <p class="form-urgent">
+          {/* Explicit {" "} — Astro strips the trailing space at a line end,
+              which runs "please" straight into the link text. */}
+          If this is a dental emergency, please{" "}
+          <a href={emergencyPhoneHref}>call us on {emergencyPhone}</a> rather
+          than using this form.
+        </p>
+
+        <div class="field">
+          <label for="reason">Reason for contact <span aria-hidden="true">*</span></label>
+          {/* A real <select>, not a scripted dropdown — custom ones are among
+              the most common keyboard traps on the web.
+
+              Every option is administrative. None records anything about the
+              person's health, which combined with the name and phone above
+              would be identifiable health information. */}
+          <select id="reason" name="reason" required>
+            <option value="" disabled selected>Please choose&hellip;</option>
+            <option value="appointment-new">Request an appointment — new patient</option>
+            <option value="appointment-current">Request an appointment — current patient</option>
+            <option value="reschedule">Reschedule or cancel an appointment</option>
+            <option value="billing">Insurance or billing question</option>
+            <option value="other">Something else</option>
+          </select>
+        </div>
+
         <div class="field">
           <label for="first-name">First name <span aria-hidden="true">*</span></label>
           <input
@@ -282,6 +315,16 @@ const FormHeading = `h${headingLevel + 1}` as "h2" | "h3";
     margin-block: 0.75rem 1.5rem;
   }
 
+  /* Full --ink and a rule to set it apart from the fields. Deliberately not
+     styled as a warning in red: this is not an error state, and it should read
+     as helpful direction rather than something gone wrong. */
+  .form-urgent {
+    margin: 0;
+    padding-inline-start: 1rem;
+    border-inline-start: 3px solid var(--teal);
+    line-height: 1.4;
+  }
+
   /* Kept at full --ink rather than a muted grey: it carries the instruction not
      to send medical details, so it needs to be read, not skimmed past. */
   .field__note {
@@ -310,7 +353,8 @@ const FormHeading = `h${headingLevel + 1}` as "h2" | "h3";
   }
 
   .field input,
-  .field textarea {
+  .field textarea,
+  .field select {
     font-family: var(--font-body);
     font-size: var(--step-small);
     color: var(--ink);
@@ -319,6 +363,17 @@ const FormHeading = `h${headingLevel + 1}` as "h2" | "h3";
     border-radius: 16px;
     padding: 20px 16px;
     width: 100%;
+  }
+
+  /* The unchosen prompt reads as placeholder text, so it takes the placeholder
+     colour — but only while it is the selection. Once a real option is picked
+     the value returns to full --ink. */
+  .field select:invalid {
+    color: var(--placeholder);
+  }
+
+  .field select option {
+    color: var(--ink);
   }
 
   .field textarea {
