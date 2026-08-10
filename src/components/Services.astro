@@ -1,5 +1,6 @@
 ---
 import { services } from "../data/site";
+import Icon from "./Icon.astro";
 
 interface Props {
   headingLevel?: 1 | 2;
@@ -28,8 +29,12 @@ const CardHeading = `h${headingLevel + 1}` as "h2" | "h3";
         plain stacked list the mobile frame shows. */}
     <ul class="services__list">
       {
-        services.map((service) => (
+        services.map((service, i) => (
           <li class="service">
+            {/* Icons run in the same order as the cards in the Figma file:
+                tooth, sparkle, shield, smile. The pale chip circle is part of
+                the exported asset. */}
+            <Icon name={`service-${i + 1}`} width={72} class="service__icon" />
             <CardHeading>{service.title}</CardHeading>
             <p>{service.description}</p>
           </li>
@@ -72,6 +77,18 @@ const CardHeading = `h${headingLevel + 1}` as "h2" | "h3";
     display: flex;
     flex-direction: column;
     gap: 1rem;
+  }
+
+  .service__icon {
+    flex: none;
+  }
+
+  /* The mobile frame lists the services as plain text with no icons; they
+     appear only once the cards do. */
+  @media (max-width: 47.99rem) {
+    .service__icon {
+      display: none;
+    }
   }
 
   @media (min-width: 48rem) {

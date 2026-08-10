@@ -1,0 +1,63 @@
+---
+/* Inlines an exported Figma SVG from public/icons at build time.
+ *
+ * Inlined rather than <img src>, so the glyph colour can be driven from CSS.
+ * That matters here: the same tooth asset appears on cream in the header and
+ * on dark teal in the footer, and the exported colour (#2C9CA6) is only 2.13:1
+ * against the footer ground.
+ *
+ * The assets are used exactly as exported apart from that recolouring -- no
+ * redrawing, no substitutions.
+ */
+import fs from "node:fs";
+import path from "node:path";
+
+interface Props {
+  /* Filename without extension, e.g. "service-1". */
+  name: string;
+  width: number;
+  height?: number;
+  /* Replaces the exported glyph colour. Pass "currentColor" to drive it from
+     CSS. Leave unset to keep the asset exactly as designed. */
+  tint?: string;
+  class?: string;
+}
+
+const { name, width, height, tint, class: className } = Astro.props;
+
+const file = path.join(process.cwd(), "public", "icons", `${name}.svg`);
+let svg = fs.readFileSync(file, "utf8");
+
+/* Figma exports these with preserveAspectRatio="none", which stretches the
+   glyph whenever the rendered box is not exactly the exported ratio. */
+svg = svg.replace(/\s*preserveAspectRatio="none"/g, "");
+
+/* Its own width/height attributes would win over CSS sizing. */
+svg = svg.replace(/^(<svg[^>]*?)\swidth="[^"]*"/, "$1");
+svg = svg.replace(/^(<svg[^>]*?)\sheight="[^"]*"/, "$1");
+
+if (tint) {
+  /* Only the glyph colour. The #E0EEF0 chip circle behind several of these is
+     left alone. */
+  svg = svg.replace(/#2C9CA6/gi, tint);
+  svg = svg.replace(/(stroke|fill)="white"/gi, `$1="${tint}"`);
+}
+
+const attrs = [
+  `width="${width}"`,
+  `height="${height ?? width}"`,
+  /* Decorative in every current usage: each icon sits beside a text label that
+     carries the same meaning, so it is hidden from assistive tech and exempt
+     from the 1.4.11 non-text contrast minimum. If one is ever used without a
+     visible label, give it a role and an accessible name, and check contrast. */
+  'aria-hidden="true"',
+  'focusable="false"',
+  className ? `class="${className}"` : "",
+]
+  .filter(Boolean)
+  .join(" ");
+
+svg = svg.replace(/^<svg/, `<svg ${attrs}`);
+---
+
+<Fragment set:html={svg} />

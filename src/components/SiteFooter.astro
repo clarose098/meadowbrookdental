@@ -1,5 +1,6 @@
 ---
 import { site, nav } from "../data/site";
+import Icon from "./Icon.astro";
 
 const year = new Date().getFullYear();
 ---
@@ -12,12 +13,9 @@ const year = new Date().getFullYear();
 <footer class="footer">
   <div class="shell footer__inner">
     <div class="footer__brand">
-      <svg class="footer__mark" viewBox="0 0 42 51" aria-hidden="true" focusable="false">
-        <path
-          d="M21 6c-4-5-11-6-15-2S1 16 4 25c2 7 4 13 6 18 1 3 4 3 5 0l4-12c1-2 3-2 4 0l4 12c1 3 4 3 5 0 2-5 4-11 6-18 3-9 2-17-2-21s-11-3-15 2Z"
-          fill="currentColor"
-        />
-      </svg>
+      {/* tint=currentColor so it inherits the footer's white. As exported
+          (#2C9CA6) it would sit at 2.13:1 on this ground. */}
+      <Icon name="logo-tooth" width={34} height={42} tint="currentColor" class="footer__mark" />
       <p class="footer__name">{site.name}</p>
       <p class="footer__tagline">{site.tagline}</p>
       <address class="footer__address">

@@ -93,7 +93,18 @@ const { id, label, itemNoun, count } = Astro.props;
     gap: 1rem;
     overflow-x: auto;
     scroll-snap-type: x mandatory;
-    scrollbar-width: thin;
+
+    /* The native scrollbar is hidden, not the scrolling. Safe to hide here
+       only because the arrows and dots below are always visible and carry the
+       same affordance -- the track also stays keyboard-scrollable via its
+       tabindex and arrow-key handler. Do not hide it in a context without
+       visible controls. */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .carousel__track::-webkit-scrollbar {
+    display: none;
   }
 
   .carousel__track > :global(*) {

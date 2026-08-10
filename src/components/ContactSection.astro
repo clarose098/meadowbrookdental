@@ -25,21 +25,25 @@ const FormHeading = `h${headingLevel + 1}` as "h2" | "h3";
         family.
       </p>
 
-      {/* Label/value pairs, so a description list rather than divs. */}
+      {/* Label/value pairs, so a description list rather than divs.
+          The icons are CSS backgrounds rather than elements: they are purely
+          decorative (every one sits beside its own label), and a <dl> may only
+          contain dt/dd pairs, so this keeps the markup valid without wrapping
+          them in something meaningless. */}
       <dl class="details">
-        <div class="details__row">
+        <div class="details__row details__row--phone">
           <dt>Phone</dt>
           <dd><a href={site.phoneHref}>{site.phone}</a></dd>
         </div>
-        <div class="details__row">
+        <div class="details__row details__row--email">
           <dt>Email</dt>
           <dd><a href={`mailto:${site.email}`}>{site.email}</a></dd>
         </div>
-        <div class="details__row">
+        <div class="details__row details__row--emergency">
           <dt>Emergency line</dt>
           <dd><a href={emergencyPhoneHref}>{emergencyPhone}</a></dd>
         </div>
-        <div class="details__row">
+        <div class="details__row details__row--hours">
           <dt>Hours</dt>
           <dd>
             <dl class="hours">
@@ -185,7 +189,50 @@ const FormHeading = `h${headingLevel + 1}` as "h2" | "h3";
   }
   .details__row {
     display: grid;
-    gap: 0.15rem;
+    grid-template-columns: 48px 1fr;
+    column-gap: 16px;
+    row-gap: 0.15rem;
+    align-items: start;
+  }
+
+  /* The icon is a pseudo-element, so the <dl> keeps a valid dt/dd structure.
+     border-radius clips it to a circle: the emergency icon is a PNG with an
+     opaque white square baked into its corners, and since every one of these
+     chips is a circle inscribed exactly in its 48px box, the clip removes
+     those corners precisely and is harmless to the SVGs. */
+  .details__row::before {
+    content: "";
+    grid-column: 1;
+    grid-row: 1 / span 2;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 48px 48px;
+  }
+  .details__row > dt,
+  .details__row > dd {
+    grid-column: 2;
+  }
+
+  .details__row--phone::before {
+    background-image: url("/icons/detail-1.svg");
+  }
+  .details__row--email::before {
+    background-image: url("/icons/detail-2.svg");
+  }
+  .details__row--emergency::before {
+    /* PNG, not SVG, and deliberately so. Every SVG export of this node comes
+       back byte-identical and contains only the outer circle -- the medical
+       cross inside it does not survive Figma's SVG export, though it is
+       present in the PNG render. This is a 4x PNG so it stays crisp at 48px.
+       Swap back to detail-3.svg once the layer is fixed in Figma;
+       detail-3.svg is still in the repo and is the incomplete version. */
+    background-image: url("/icons/detail-3.png");
+  }
+  .details__row--hours::before {
+    background-image: url("/icons/detail-4.svg");
   }
   .details dt {
     font-size: 19px; /* see .eyebrow -- same large-text threshold reasoning */

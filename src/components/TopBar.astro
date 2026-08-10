@@ -1,5 +1,6 @@
 ---
 import { site } from "../data/site";
+import Icon from "./Icon.astro";
 ---
 
 {/* Utility strip above the header. Two of the three items are shown on desktop
@@ -8,11 +9,19 @@ import { site } from "../data/site";
     what we want here (no duplicate announcements). */}
 <div class="topbar">
   <div class="shell topbar__inner">
-    <p class="topbar__item topbar__item--wide">Accepting new patients</p>
-    <p class="topbar__item topbar__item--wide">Most insurance welcome</p>
+    {/* tint=currentColor throughout: topbar-2 exports at #2C9CA6, which is
+        2.13:1 on this ground. Inheriting the bar's white gives 6.99:1. */}
+    <p class="topbar__item topbar__item--wide">
+      <Icon name="topbar-2" width={18} tint="currentColor" />
+      <span>Accepting new patients</span>
+    </p>
+    <p class="topbar__item topbar__item--wide">
+      <Icon name="topbar-2" width={18} tint="currentColor" />
+      <span>Most insurance welcome</span>
+    </p>
     <p class="topbar__item topbar__contact">
-      {site.dentist} &bull;{" "}
-      <a href={site.phoneHref}>{site.phone}</a>
+      <span>{site.dentist} &bull; <a href={site.phoneHref}>{site.phone}</a></span>
+      <Icon name="topbar-1" width={17} tint="currentColor" />
     </p>
   </div>
 </div>
@@ -33,6 +42,9 @@ import { site } from "../data/site";
 
   .topbar__item {
     margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
   }
 
   .topbar__contact {
