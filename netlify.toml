@@ -4,3 +4,56 @@
 
 [build.environment]
   NODE_VERSION = "22"
+
+# ---------------------------------------------------------------------------
+# Security headers
+#
+# Netlify sets HSTS on its own; everything below it does not. There are no
+# third-party scripts, fonts, analytics or embeds on this site, so the policy
+# can be tight.
+#
+# One deliberate exception: script-src allows 'unsafe-inline'. Astro inlines
+# small component scripts (the mobile nav and the carousel) directly into the
+# HTML, so a strict script-src would break them. Pinning their SHA-256 hashes
+# here would work but the hashes change on every build, so the policy would go
+# stale silently -- worse than a permissive directive. Everything else is
+# locked down, and with no user-generated content on the site the injection
+# surface is the CMS-less build itself.
+# ---------------------------------------------------------------------------
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=(), interest-cohort=()"
+    Content-Security-Policy = "default-src 'self'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; object-src 'none'; img-src 'self' data:; font-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; upgrade-insecure-requests"
+
+# ---------------------------------------------------------------------------
+# Caching
+#
+# Netlify's default for everything is max-age=0, must-revalidate, which costs a
+# round trip per asset per page load even when nothing has changed.
+# ---------------------------------------------------------------------------
+
+# Astro fingerprints these filenames, so a change produces a new URL and the old
+# one can be cached forever.
+[[headers]]
+  for = "/_astro/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# Font filenames are stable, not fingerprinted. Cached for a year because the
+# faces will not change -- IF one ever does, rename the file rather than
+# replacing it in place, or a year of visitors keep the old one.
+[[headers]]
+  for = "/fonts/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# Photos are likely to be swapped without renaming, so these get a week with a
+# stale-while-revalidate window rather than a year.
+[[headers]]
+  for = "/images/*"
+  [headers.values]
+    Cache-Control = "public, max-age=604800, stale-while-revalidate=86400"

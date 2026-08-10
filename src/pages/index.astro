@@ -7,8 +7,11 @@ import Testimonials from "../components/Testimonials.astro";
 import ContactSection from "../components/ContactSection.astro";
 ---
 
+{/* Note the plain "&" in the title below: it is a prop, not markup. Astro
+    escapes props on output, so writing &amp; there double-escapes and the
+    browser tab shows a literal "&amp;". */}
 <BaseLayout
-  title="Family &amp; Cosmetic Dentistry in Auburn Hills, MI"
+  title="Family & Cosmetic Dentistry in Auburn Hills, MI"
   description="Dr. Tejal Soni has cared for Auburn Hills families for nearly three decades. Gentle, personalized dentistry — from routine cleanings to complete smile makeovers."
 >
   <Hero />

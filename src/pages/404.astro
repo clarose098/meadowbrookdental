@@ -1,0 +1,53 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { site, nav } from "../data/site";
+---
+
+{/* Netlify serves this automatically for unmatched paths on a static site.
+    It keeps the full header and footer so a lost visitor still has the phone
+    number and the nav in front of them. */}
+<BaseLayout
+  title="Page not found"
+  description="That page doesn't exist. Find your way back to Meadowbrook Dental."
+>
+  <section class="section" aria-labelledby="notfound-title">
+    <div class="shell notfound">
+      <p class="eyebrow">Page not found</p>
+      <h1 id="notfound-title">We couldn&rsquo;t find that page</h1>
+      <p>
+        The link may be out of date, or the address mistyped. Here&rsquo;s
+        where most people are heading:
+      </p>
+
+      <nav aria-label="Page not found">
+        <ul class="notfound__list">
+          {nav.map((item) => <li><a href={item.href}>{item.label}</a></li>)}
+        </ul>
+      </nav>
+
+      <p>
+        Or call the practice on <a href={site.phoneHref}>{site.phone}</a> and
+        we&rsquo;ll help directly.
+      </p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .notfound {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    align-items: flex-start;
+    max-width: 55ch;
+  }
+
+  .notfound__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 1.75rem;
+  }
+</style>
