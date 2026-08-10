@@ -1,0 +1,14 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import AboutDoctor from "../components/AboutDoctor.astro";
+---
+
+{/* Stub. The Figma file only contains the homepage, so this route exists to
+    keep the nav from 404-ing and reuses the homepage's about section until a
+    design lands. */}
+<BaseLayout
+  title="About Dr. Tejal Soni"
+  description="Meet Dr. Tejal Soni, DDS — nearly three decades of gentle family and cosmetic dentistry in Auburn Hills, Michigan."
+>
+  <AboutDoctor headingLevel={1} />
+</BaseLayout>

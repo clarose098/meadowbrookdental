@@ -1,0 +1,39 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import ContactSection from "../components/ContactSection.astro";
+import { site } from "../data/site";
+---
+
+{/* Stub -- see about.astro. Unlike the other stubs this one gets its own h1
+    rather than promoting the reused section's heading, because "Come visit our
+    Auburn Hills office" is not what this page is about. Needs real content from
+    the practice: what to bring, insurance accepted, first-visit expectations. */}
+<BaseLayout
+  title="New Patients"
+  description="Accepting new patients. Most insurance welcome. Here's what to expect on your first visit to Meadowbrook Dental."
+>
+  <section class="section" aria-labelledby="new-patients-title">
+    <div class="shell intro">
+      <p class="eyebrow">Welcome</p>
+      <h1 id="new-patients-title">New patients are always welcome</h1>
+      <p>
+        We&rsquo;re accepting new patients and most insurance is welcome. Get in
+        touch and we&rsquo;ll walk you through everything before your first
+        visit &mdash; or call us on{" "}
+        <a href={site.phoneHref}>{site.phone}</a> if you&rsquo;d rather talk it
+        through.
+      </p>
+    </div>
+  </section>
+
+  <ContactSection />
+</BaseLayout>
+
+<style>
+  .intro {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    max-width: 60ch;
+  }
+</style>

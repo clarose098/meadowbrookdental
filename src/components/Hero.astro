@@ -1,0 +1,108 @@
+---
+import Carousel from "./Carousel.astro";
+import { site, heroPhotos } from "../data/site";
+---
+
+<section class="hero section" aria-labelledby="hero-title">
+  <div class="shell hero__inner">
+    <div class="hero__copy">
+      <h1 id="hero-title">
+        Family &amp; Cosmetic Dentistry in {site.locality}, {site.region}
+      </h1>
+      <p class="hero__lede">
+        For nearly three decades, Dr. Tejal Soni has helped families smile with
+        gentle, personalized care &mdash; from routine cleanings to complete
+        smile makeovers. We&rsquo;d love to welcome you to {site.name}.
+      </p>
+      <div class="hero__actions">
+        <a class="btn btn--solid" href="/contact/">Book an appointment</a>
+        <a class="btn btn--outline" href={site.phoneHref}>
+          Call {site.phone}
+        </a>
+      </div>
+    </div>
+
+    <div class="hero__media">
+      <Carousel
+        id="hero-carousel"
+        label="Photos of the practice"
+        itemNoun="photo"
+        count={heroPhotos.length}
+      >
+        {
+          heroPhotos.map((photo, i) => (
+            <figure
+              class="hero__slide"
+              role="group"
+              aria-roledescription="slide"
+              aria-label={`${i + 1} of ${heroPhotos.length}`}
+            >
+              <img src={photo.src} alt={photo.alt} width="629" height="362" />
+              <figcaption>{photo.caption}</figcaption>
+            </figure>
+          ))
+        }
+      </Carousel>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    background: var(--grad-hero);
+  }
+
+  .hero__inner {
+    display: grid;
+    gap: clamp(2rem, 5vw, 4rem);
+    align-items: center;
+  }
+
+  .hero__copy {
+    display: flex;
+    flex-direction: column;
+    gap: 1.75rem;
+  }
+
+  .hero__lede {
+    max-width: 34ch;
+  }
+
+  .hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+  }
+
+  .hero__media {
+    background: var(--cream);
+    border-radius: var(--radius-card);
+    padding: clamp(1rem, 3vw, 2rem);
+  }
+
+  .hero__slide {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .hero__slide img {
+    width: 100%;
+    height: auto;
+    border-radius: 12px;
+    object-fit: cover;
+  }
+
+  .hero__slide figcaption {
+    font-weight: 700;
+    color: var(--teal);
+    text-align: center;
+  }
+
+  @media (min-width: 62rem) {
+    .hero__inner {
+      grid-template-columns: 547fr 694fr;
+    }
+  }
+</style>

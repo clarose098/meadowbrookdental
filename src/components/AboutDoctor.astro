@@ -1,0 +1,112 @@
+---
+import { site } from "../data/site";
+
+interface Props {
+  /* 1 when this section is the page's subject (the About page), 2 when it is
+     one section among several (the homepage). Keeps every page to exactly one
+     h1 without duplicating the heading text. */
+  headingLevel?: 1 | 2;
+}
+
+const { headingLevel = 2 } = Astro.props;
+const Heading = `h${headingLevel}` as "h1" | "h2";
+---
+
+{/* Source order here is the MOBILE order: eyebrow, name, photo, description,
+    buttons. Desktop moves the photo into a left-hand column using grid areas.
+    That is deliberate -- reordering with flexbox `order` would decouple the
+    visual sequence from the DOM sequence and fail 1.3.2 Meaningful Sequence
+    and 2.4.3 Focus Order. The photo is the only element that moves, and it is
+    not focusable, so tab order is identical in both layouts. */}
+<section class="about section" aria-labelledby="about-title">
+  <div class="shell about__inner">
+    <p class="eyebrow about__eyebrow">Meet your dentist</p>
+
+    <Heading id="about-title" class="about__name">Dr. {site.dentist}</Heading>
+
+    <div class="about__photo">
+      <img
+        src="/images/dr-soni.jpg"
+        alt="Dr. Tejal Soni in the Meadowbrook Dental practice."
+        width="373"
+        height="462"
+      />
+    </div>
+
+    <div class="about__body">
+      <p>
+        Dr. Tejal Soni earned her Doctor of Dental Surgery from New York
+        University in 2005, graduating with honors in special-needs care and
+        implantology, and has practiced in Michigan ever since. She&rsquo;s
+        certified in Invisalign and enjoys every aspect of general dentistry
+        &mdash; with a special love for root canals that bring her patients
+        relief.
+      </p>
+      <p>
+        A member of the American Dental Association, Michigan Dental
+        Association, and Macomb Dental Society, she&rsquo;s committed to
+        lifelong learning and the latest in dental technology.
+      </p>
+      <p>
+        Outside the office, Dr. Soni lives in Troy with her husband Nilesh and
+        their son Pratham, and enjoys watching sports and cooking for family
+        and friends.
+      </p>
+    </div>
+
+    <div class="about__actions">
+      <a class="btn btn--solid" href="/contact/">Book an appointment</a>
+      <a class="btn btn--outline" href={site.phoneHref}>Call {site.phone}</a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .about__inner {
+    display: grid;
+    gap: 1.75rem;
+  }
+
+  .about__photo {
+    background: var(--cream-dim);
+    border-radius: var(--radius-card);
+    padding: clamp(1rem, 3vw, 2.2rem);
+  }
+  .about__photo img {
+    width: 100%;
+    height: auto;
+    border-radius: 12px;
+    object-fit: cover;
+  }
+
+  .about__body {
+    display: flex;
+    flex-direction: column;
+    gap: 1.4rem;
+  }
+
+  .about__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+  }
+
+  @media (min-width: 62rem) {
+    .about__inner {
+      grid-template-columns: 429fr 648fr;
+      grid-template-rows: auto auto 1fr auto;
+      column-gap: clamp(2rem, 5vw, 3.3rem);
+      align-items: start;
+      grid-template-areas:
+        "photo eyebrow"
+        "photo name"
+        "photo body"
+        "photo actions";
+    }
+    .about__eyebrow { grid-area: eyebrow; }
+    .about__name    { grid-area: name; }
+    .about__photo   { grid-area: photo; }
+    .about__body    { grid-area: body; }
+    .about__actions { grid-area: actions; }
+  }
+</style>

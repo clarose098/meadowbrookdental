@@ -1,0 +1,38 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { site } from "../data/site";
+---
+
+{/* Where the Netlify form POST lands. A separate page rather than an inline
+    message: the navigation itself tells a screen reader something happened,
+    and the new <h1> is announced on arrival. */}
+<BaseLayout
+  title="Thank you"
+  description="Your appointment request has been sent to Meadowbrook Dental."
+>
+  <section class="section">
+    <div class="shell confirm">
+      <p class="eyebrow">Request received</p>
+      <h1>Thank you &mdash; we&rsquo;ll be in touch</h1>
+      <p>
+        Your request has reached the practice. Someone will call you back to
+        confirm a time, usually within one business day.
+      </p>
+      <p>
+        If it&rsquo;s urgent, please call us directly on{" "}
+        <a href={site.phoneHref}>{site.phone}</a>.
+      </p>
+      <p><a class="btn btn--outline" href="/">Back to the homepage</a></p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .confirm {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    align-items: flex-start;
+    max-width: 55ch;
+  }
+</style>

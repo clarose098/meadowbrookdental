@@ -1,0 +1,61 @@
+---
+import { site } from "../data/site";
+---
+
+{/* Utility strip above the header. Two of the three items are shown on desktop
+    only, matching the mobile frame -- they are supplementary, and hiding them
+    with `display: none` keeps them out of the accessibility tree too, which is
+    what we want here (no duplicate announcements). */}
+<div class="topbar">
+  <div class="shell topbar__inner">
+    <p class="topbar__item topbar__item--wide">Accepting new patients</p>
+    <p class="topbar__item topbar__item--wide">Most insurance welcome</p>
+    <p class="topbar__item topbar__contact">
+      {site.dentist} &bull;{" "}
+      <a href={site.phoneHref}>{site.phone}</a>
+    </p>
+  </div>
+</div>
+
+<style>
+  .topbar {
+    background: var(--teal-deep); /* white text sits at 6.99:1 here */
+    color: var(--white);
+    font-size: var(--step-body);
+  }
+
+  .topbar__inner {
+    display: flex;
+    justify-content: flex-end;
+    gap: clamp(1rem, 4vw, 3rem);
+    padding-block: 0.5rem;
+  }
+
+  .topbar__item {
+    margin: 0;
+  }
+
+  .topbar__contact {
+    margin-inline-start: auto;
+  }
+
+  .topbar a {
+    color: inherit;
+  }
+
+  .topbar :focus-visible {
+    outline-color: var(--white);
+  }
+
+  @media (max-width: 47.99rem) {
+    .topbar__item--wide {
+      display: none;
+    }
+    .topbar__inner {
+      justify-content: center;
+    }
+    .topbar__contact {
+      margin-inline-start: 0;
+    }
+  }
+</style>

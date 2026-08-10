@@ -1,0 +1,103 @@
+---
+import Carousel from "./Carousel.astro";
+import { testimonials } from "../data/site";
+---
+
+{/* This section keeps --teal-brand as its ground. Every piece of text on it is
+    24px or larger, which is WCAG's large-text threshold, so the 3:1 minimum
+    applies rather than 4.5:1 -- and white on --teal-brand is 3.27:1. The
+    carousel arrows and dots inherit white too, and 3.27:1 clears the 3:1
+    needed for non-text controls. */}
+<section class="testimonials section" aria-labelledby="testimonials-title">
+  <div class="shell">
+    <h2 id="testimonials-title" class="testimonials__title">
+      What our patients say
+    </h2>
+
+    <Carousel
+      id="testimonial-carousel"
+      label="Patient reviews"
+      itemNoun="review"
+      count={testimonials.length}
+    >
+      {
+        testimonials.map((item, i) => (
+          <figure
+            class="testimonial"
+            role="group"
+            aria-roledescription="slide"
+            aria-label={`${i + 1} of ${testimonials.length}`}
+          >
+            <p class="testimonial__rating">
+              <span class="testimonial__stars" aria-hidden="true">
+                {"★".repeat(item.rating)}
+              </span>
+              <span class="visually-hidden">
+                Rated {item.rating} out of 5
+              </span>
+            </p>
+            <blockquote>
+              <p>{item.quote}</p>
+            </blockquote>
+            <figcaption>{item.author}</figcaption>
+          </figure>
+        ))
+      }
+    </Carousel>
+  </div>
+</section>
+
+<style>
+  .testimonials {
+    background: var(--teal-brand);
+    color: var(--white);
+    border-radius: var(--radius-card);
+  }
+
+  .testimonials__title {
+    text-align: center;
+    font-size: var(--step-h3);
+    text-transform: uppercase;
+    font-family: var(--font-body);
+    letter-spacing: 0.04em;
+    margin-bottom: clamp(1.5rem, 4vw, 2.5rem);
+  }
+
+  .testimonial {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.25rem;
+    text-align: center;
+  }
+
+  .testimonial__rating {
+    margin: 0;
+  }
+
+  .testimonial__stars {
+    font-size: 1.3rem;
+    letter-spacing: 0.25em;
+  }
+
+  .testimonial blockquote {
+    margin: 0;
+    max-width: 60ch;
+  }
+
+  .testimonial blockquote p {
+    font-family: var(--font-display);
+    font-size: 24px;
+    line-height: var(--leading-body);
+  }
+
+  .testimonial figcaption {
+    font-weight: 700;
+    font-size: 24px;
+  }
+
+  .testimonials :focus-visible {
+    outline-color: var(--white);
+  }
+</style>

@@ -15,15 +15,17 @@
                    --cream. That is why the warm surfaces below were lifted.
      --teal        for the 4.5:1 threshold: body-size links, small labels,
                    button fills under white text, focus rings.
-                   deltaE2000 12.13 from brand -- the closest sRGB colour that
-                   passes AA on every surface in the design. 4.72:1 on cream,
-                   5.04:1 under white.
+                   deltaE2000 13.09 from brand. #0b7b81 is fractionally closer
+                   (12.13) but reaches it by pushing saturation to 84%; this
+                   holds the brand's 66% and reads calmer for the same
+                   legality. 4.87:1 on cream, 4.84:1 on the pale cyan,
+                   5.20:1 under white.
 
      Note the eyebrow labels ("GET IN TOUCH") are 18px bold in Figma = 13.5pt,
      just under WCAG's 14pt-bold large-text threshold. They are set at 19px in
      this build so they qualify at 3:1 and can keep --teal-brand. */
   --teal-brand: #2c9ca6;
-  --teal: #0b7b81;
+  --teal: #1a787f;
   --teal-deep: #2f606b;
 
   /* Gradient for solid buttons. Runs deep -> --teal so the white label clears
@@ -33,6 +35,18 @@
 
   /* ---- Ink ---- */
   --ink: #363636;
+
+  /* Placeholder text. Figma used #a6a6a6, which is 2.43:1 on white -- it is
+     visible text and still needs 4.5:1. #767676 is the lightest grey that
+     passes; this has a little headroom on top of that. */
+  --placeholder: #6b6b6b;
+
+  /* Footer ground. Figma had the footer on --teal-brand with white text at
+     3.27:1, and the copyright line at 80% opacity for 2.64:1 -- the whole
+     footer failed. --teal-deep carries white at 6.99:1. The copyright runs at
+     full opacity here for the same reason: at 80% over this ground it is
+     5.15:1, which passes but leaves nothing spare. */
+  --footer-bg: var(--teal-deep);
 
   /* ---- Surfaces ----
      Figma had five slightly different light surfaces (#fbf7f0 #f3eee5 #f4eee4

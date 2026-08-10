@@ -1,0 +1,230 @@
+---
+/* Scroll-snap carousel.
+ *
+ * The reason this is not a carousel library: with scroll-snap the track is a
+ * plain scrollable element, so it is operable by touch, trackpad, arrow keys
+ * and screen-reader virtual cursor before a single line of JS runs. The script
+ * below only adds the buttons' behaviour and the live announcement -- if it
+ * fails to load, the carousel degrades to a scrollable row rather than to a
+ * stack of hidden content.
+ *
+ * Nothing here autoplays, so no pause control is required (WCAG 2.2.2).
+ */
+
+interface Props {
+  id: string;
+  label: string;
+  /* What one slide is called, for button and dot labels: "photo", "review". */
+  itemNoun: string;
+  count: number;
+}
+
+const { id, label, itemNoun, count } = Astro.props;
+---
+
+<div class="carousel" id={id} data-carousel data-noun={itemNoun}>
+  <div
+    class="carousel__viewport"
+    role="group"
+    aria-roledescription="carousel"
+    aria-label={label}
+  >
+    {/* tabindex makes the scrollable region reachable by keyboard, which
+        2.1.1 requires of anything that scrolls independently. */}
+    <div class="carousel__track" tabindex="0" data-track>
+      <slot />
+    </div>
+  </div>
+
+  <div class="carousel__controls">
+    <button class="carousel__arrow" type="button" data-prev>
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path
+          d="M15 4 7 12l8 8"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"></path>
+      </svg>
+      <span class="visually-hidden">Previous {itemNoun}</span>
+    </button>
+
+    <ul class="carousel__dots" data-dots>
+      {
+        Array.from({ length: count }).map((_, i) => (
+          <li>
+            <button
+              type="button"
+              data-dot={i}
+              aria-current={i === 0 ? "true" : undefined}
+            >
+              <span class="visually-hidden">
+                Go to {itemNoun} {i + 1} of {count}
+              </span>
+            </button>
+          </li>
+        ))
+      }
+    </ul>
+
+    <button class="carousel__arrow" type="button" data-next>
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path
+          d="M9 4l8 8-8 8"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"></path>
+      </svg>
+      <span class="visually-hidden">Next {itemNoun}</span>
+    </button>
+  </div>
+
+  {/* Slide changes are announced here rather than by moving focus, so the
+      page does not yank a keyboard user around as they browse. */}
+  <p class="visually-hidden" aria-live="polite" data-status></p>
+</div>
+
+<style>
+  .carousel__track {
+    display: flex;
+    gap: 1rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: thin;
+  }
+
+  .carousel__track > :global(*) {
+    flex: 0 0 100%;
+    scroll-snap-align: center;
+  }
+
+  .carousel__controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 1.25rem;
+  }
+
+  .carousel__arrow {
+    display: grid;
+    place-items: center;
+    width: 52px;
+    height: 52px;
+    flex: none;
+    border-radius: 50%;
+    border: 1px solid currentColor;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+  }
+  .carousel__arrow svg {
+    width: 22px;
+    height: 22px;
+  }
+  .carousel__arrow[disabled] {
+    opacity: 0.4;
+    cursor: default;
+  }
+
+  .carousel__dots {
+    display: flex;
+    gap: 6px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .carousel__dots button {
+    width: 11px;
+    height: 11px;
+    padding: 0;
+    border-radius: 50%;
+    border: 1px solid currentColor;
+    background: transparent;
+    cursor: pointer;
+  }
+  /* State is carried by fill AND by aria-current, never by colour alone. */
+  .carousel__dots button[aria-current="true"] {
+    background: currentColor;
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>("[data-carousel]").forEach((root) => {
+    const track = root.querySelector<HTMLElement>("[data-track]");
+    const status = root.querySelector<HTMLElement>("[data-status]");
+    const prev = root.querySelector<HTMLButtonElement>("[data-prev]");
+    const next = root.querySelector<HTMLButtonElement>("[data-next]");
+    const dots = Array.from(root.querySelectorAll<HTMLButtonElement>("[data-dot]"));
+    if (!track) return;
+
+    const slides = Array.from(track.children) as HTMLElement[];
+    const noun = root.dataset.noun ?? "item";
+    let index = 0;
+
+    const reduceMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+
+    function go(to: number, announce = true) {
+      index = Math.max(0, Math.min(to, slides.length - 1));
+      slides[index].scrollIntoView({
+        behavior: reduceMotion ? "auto" : "smooth",
+        block: "nearest",
+        inline: "center",
+      });
+      sync(announce);
+    }
+
+    function sync(announce: boolean) {
+      dots.forEach((dot, i) => {
+        if (i === index) dot.setAttribute("aria-current", "true");
+        else dot.removeAttribute("aria-current");
+      });
+      if (prev) prev.disabled = index === 0;
+      if (next) next.disabled = index === slides.length - 1;
+      if (announce && status) {
+        status.textContent = `${noun} ${index + 1} of ${slides.length}`;
+      }
+    }
+
+    prev?.addEventListener("click", () => go(index - 1));
+    next?.addEventListener("click", () => go(index + 1));
+    dots.forEach((dot, i) => dot.addEventListener("click", () => go(i)));
+
+    track.addEventListener("keydown", (event) => {
+      if (event.key === "ArrowLeft") {
+        event.preventDefault();
+        go(index - 1);
+      } else if (event.key === "ArrowRight") {
+        event.preventDefault();
+        go(index + 1);
+      }
+    });
+
+    // Keep state honest when the user scrolls the track directly rather than
+    // using the controls. Announcing here would interrupt, so it stays silent.
+    if ("IntersectionObserver" in window) {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              const i = slides.indexOf(entry.target as HTMLElement);
+              if (i >= 0 && i !== index) {
+                index = i;
+                sync(false);
+              }
+            }
+          });
+        },
+        { root: track, threshold: 0.6 },
+      );
+      slides.forEach((slide) => observer.observe(slide));
+    }
+
+    sync(false);
+  });
+</script>

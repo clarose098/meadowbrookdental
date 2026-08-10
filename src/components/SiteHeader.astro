@@ -1,0 +1,241 @@
+---
+import { site, nav } from "../data/site";
+
+const currentPath = Astro.url.pathname;
+---
+
+<header class="header">
+  <div class="shell header__inner">
+    <a class="logo" href="/">
+      {/* Logotype. WCAG 1.4.3 exempts text that is part of a logo or brand
+          name from the contrast minimum, which is why this keeps
+          --teal-brand at body weight where other text could not. */}
+      <svg class="logo__mark" viewBox="0 0 42 51" aria-hidden="true" focusable="false">
+        <path
+          d="M21 6c-4-5-11-6-15-2S1 16 4 25c2 7 4 13 6 18 1 3 4 3 5 0l4-12c1-2 3-2 4 0l4 12c1 3 4 3 5 0 2-5 4-11 6-18 3-9 2-17-2-21s-11-3-15 2Z"
+          fill="currentColor"
+        />
+      </svg>
+      <span class="logo__text">
+        <span class="logo__name">{site.name}</span>
+        <span class="logo__tagline">{site.tagline}</span>
+      </span>
+    </a>
+
+    <button
+      class="menu-toggle"
+      type="button"
+      aria-expanded="false"
+      aria-controls="site-nav"
+    >
+      <span class="menu-toggle__bars" aria-hidden="true">
+        <span></span><span></span><span></span>
+      </span>
+      <span class="visually-hidden">Menu</span>
+    </button>
+
+    <nav id="site-nav" class="nav" aria-label="Main">
+      <ul class="nav__list">
+        {
+          nav.map((item) => (
+            <li>
+              <a
+                href={item.href}
+                aria-current={currentPath === item.href ? "page" : undefined}
+              >
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      <a class="nav__cta" href="/contact/">Book an appointment</a>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .header {
+    background: var(--cream);
+  }
+
+  .header__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    padding-block: 1.25rem;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    text-decoration: none;
+    color: var(--teal-brand);
+  }
+  .logo__mark {
+    width: 2.1rem;
+    height: 2.55rem;
+    flex: none;
+  }
+  .logo__text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.05;
+  }
+  .logo__name {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(1.15rem, 1rem + 0.7vw, 1.68rem);
+  }
+  .logo__tagline {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: clamp(0.9rem, 0.8rem + 0.5vw, 1.35rem);
+    align-self: flex-end;
+  }
+
+  .menu-toggle {
+    display: grid;
+    place-items: center;
+    width: 49px;
+    height: 49px;
+    border-radius: 50%;
+    border: 1px solid var(--teal);
+    background: transparent;
+    cursor: pointer;
+    flex: none;
+  }
+  .menu-toggle__bars {
+    display: grid;
+    gap: 4px;
+    width: 25px;
+  }
+  .menu-toggle__bars span {
+    display: block;
+    height: 2px;
+    background: var(--ink);
+  }
+
+  .nav__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .nav a {
+    color: var(--ink);
+    text-transform: uppercase;
+  }
+  .nav a[aria-current="page"] {
+    font-weight: 700;
+  }
+
+  /* ---- Mobile: nav is a disclosure panel ---- */
+  @media (max-width: 61.99rem) {
+    .nav {
+      position: absolute;
+      left: 0;
+      right: 0;
+      background: var(--cream);
+      padding: var(--gutter);
+      display: none;
+      flex-direction: column;
+      gap: 1.5rem;
+      z-index: 20;
+    }
+    .header:has(.menu-toggle[aria-expanded="true"]) .nav {
+      display: flex;
+    }
+    .nav__list {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+  }
+
+  /* ---- Desktop: nav is always visible, toggle is not rendered ---- */
+  @media (min-width: 62rem) {
+    .menu-toggle {
+      display: none;
+    }
+    .nav {
+      display: flex;
+      align-items: center;
+      gap: clamp(1.5rem, 3vw, 3.75rem);
+    }
+    .nav__list {
+      display: flex;
+      gap: clamp(1.5rem, 3vw, 3.75rem);
+    }
+  }
+</style>
+
+<script>
+  const toggle = document.querySelector<HTMLButtonElement>(".menu-toggle");
+  const panel = document.getElementById("site-nav");
+
+  if (toggle && panel) {
+    const isOpen = () => toggle.getAttribute("aria-expanded") === "true";
+
+    const focusables = () =>
+      Array.from(
+        panel.querySelectorAll<HTMLElement>('a[href], button:not([disabled])'),
+      ).filter((el) => el.offsetParent !== null);
+
+    function setOpen(open: boolean) {
+      toggle!.setAttribute("aria-expanded", String(open));
+      if (open) {
+        focusables()[0]?.focus();
+      }
+    }
+
+    toggle.addEventListener("click", () => setOpen(!isOpen()));
+
+    // Escape closes and returns focus to the trigger, so a keyboard user is
+    // never stranded inside a panel they cannot see the edges of.
+    document.addEventListener("keydown", (event) => {
+      if (!isOpen()) return;
+
+      if (event.key === "Escape") {
+        setOpen(false);
+        toggle!.focus();
+        return;
+      }
+
+      if (event.key !== "Tab") return;
+
+      // Trap: while the panel is open, Tab cycles within it.
+      const items = focusables();
+      if (items.length === 0) return;
+      const first = items[0];
+      const last = items[items.length - 1];
+      const active = document.activeElement;
+
+      if (event.shiftKey && (active === first || active === toggle)) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && active === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    });
+
+    // A click outside is a dismissal too, but focus goes back to the trigger
+    // rather than nowhere.
+    document.addEventListener("click", (event) => {
+      if (!isOpen()) return;
+      const target = event.target as Node;
+      if (!panel!.contains(target) && !toggle!.contains(target)) {
+        setOpen(false);
+      }
+    });
+
+    // If the viewport crosses into desktop while the panel is open, reset the
+    // state -- otherwise aria-expanded lies about a nav that is now permanent.
+    const desktop = window.matchMedia("(min-width: 62rem)");
+    desktop.addEventListener("change", (event) => {
+      if (event.matches) toggle!.setAttribute("aria-expanded", "false");
+    });
+  }
+</script>

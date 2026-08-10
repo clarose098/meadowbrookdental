@@ -20,6 +20,36 @@ Measured against the actual backgrounds in the file, not against white.
 The ink-on-cream pairings are all comfortable. Every failure is the same root
 cause: **the brand teal `#2c9ca6` is too light to carry text or a border.**
 
+### Two more found while building
+
+The table above covers the hero and contact sections. Auditing the remaining
+sections turned up two further failures:
+
+| Element | Colours | Ratio | Needs | Result |
+| --- | --- | --- | --- | --- |
+| Footer links and address | `#ffffff` on `#2c9ca6` | 3.27:1 | 4.5:1 | **FAIL** |
+| Footer copyright, 80% opacity | white 80% on `#2c9ca6` | 2.64:1 | 4.5:1 | **FAIL** |
+| Form placeholders | `#a6a6a6` on `#ffffff` | 2.43:1 | 4.5:1 | **FAIL** |
+| Top bar, white on `#2f606b` | `#ffffff` on `#2f606b` | 6.99:1 | 4.5:1 | pass |
+
+The footer was the significant one — every piece of text in it failed. The
+ground moves to `--teal-deep`, where white is 6.99:1, and the copyright runs at
+full opacity (at 80% over that ground it is 5.15:1, which passes but leaves
+nothing spare).
+
+Placeholders are visible text and carry the same 4.5:1 minimum. `#767676` is the
+lightest grey that passes on white; `--placeholder` is set to `#6b6b6b` for a
+little headroom.
+
+**The testimonial section keeps `--teal-brand` as its ground.** Every piece of
+text on it is 24px or larger, so the 3:1 large-text threshold applies and white
+clears it at 3.27:1 — as do the carousel arrows and dots, which need 3:1 as
+non-text controls.
+
+**The logotype keeps `--teal-brand` at body weight.** WCAG 1.4.3 exempts text
+that is part of a logo or brand name from the contrast minimum. This is the only
+place that exemption is relied on.
+
 ### Resolution
 
 The goal was to stay as close to `#2c9ca6` as possible while passing AA. Two

@@ -9,6 +9,7 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
+    "a11y": "astro build && python3 scripts/a11y-check.py",
     "astro": "astro"
   },
   "dependencies": {

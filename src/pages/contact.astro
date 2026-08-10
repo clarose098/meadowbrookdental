@@ -1,0 +1,14 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import ContactSection from "../components/ContactSection.astro";
+---
+
+{/* Stub -- see about.astro. Note this renders a second copy of the contact
+    form. Netlify keys submissions on the form's `name` attribute, so both
+    copies post to the same "contact" collection, which is fine. */}
+<BaseLayout
+  title="Contact"
+  description="Call, email or visit Meadowbrook Dental at 3421 Five Points Drive, Auburn Hills, MI 48326."
+>
+  <ContactSection headingLevel={1} />
+</BaseLayout>
