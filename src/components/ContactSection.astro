@@ -155,7 +155,20 @@ const FormHeading = `h${headingLevel + 1}` as "h2" | "h3";
             name="message"
             rows="5"
             required
+            aria-describedby="message-note"
             placeholder="Enter message"></textarea>
+          {/* Tied to the textarea with aria-describedby, so it is announced
+              when the field takes focus rather than only being visible.
+
+              Second sentence is a deliberate addition. Netlify Forms is not
+              HIPAA-eligible and will not sign a BAA, so this field should not
+              be inviting clinical detail. See docs/accessibility.md and the
+              PHI note in the README. */}
+          <p class="field__note" id="message-note">
+            Let us know any questions, or what you&rsquo;d like help with.
+            There&rsquo;s no need to include medical details &mdash; we&rsquo;ll
+            go through those with you when we call.
+          </p>
         </div>
 
         <button class="btn btn--solid" type="submit">Submit</button>
@@ -267,6 +280,14 @@ const FormHeading = `h${headingLevel + 1}` as "h2" | "h3";
 
   .contact__required-note {
     margin-block: 0.75rem 1.5rem;
+  }
+
+  /* Kept at full --ink rather than a muted grey: it carries the instruction not
+     to send medical details, so it needs to be read, not skimmed past. */
+  .field__note {
+    margin: 0;
+    font-size: 1rem;
+    line-height: 1.4;
   }
 
   form {
