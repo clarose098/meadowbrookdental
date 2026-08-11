@@ -88,9 +88,21 @@ const { id, label, itemNoun, count } = Astro.props;
 </div>
 
 <style>
+  /* min-width: 0 on all three.
+     A grid or flex child's automatic minimum size is its MIN-CONTENT width, and
+     `overflow-x: auto` does not change that -- so the track was reporting the
+     full width of its slides up the tree, widening the hero column to 484px
+     inside a 335px content box and giving the whole page 1305px of horizontal
+     scroll at 375px. The scroll belongs to the track, not the document. */
+  .carousel,
+  .carousel__viewport {
+    min-width: 0;
+  }
+
   .carousel__track {
     display: flex;
     gap: 1rem;
+    min-width: 0;
     overflow-x: auto;
     scroll-snap-type: x mandatory;
 

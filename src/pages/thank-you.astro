@@ -28,11 +28,18 @@ import { site } from "../data/site";
 </BaseLayout>
 
 <style>
+  /* The container is wide enough for the headline; the running text keeps its
+     own measure below, so widening the column does not produce over-long lines
+     to read. */
   .confirm {
     display: flex;
     flex-direction: column;
     gap: 1.25rem;
     align-items: flex-start;
+    max-width: 54rem;
+  }
+
+  .confirm p {
     max-width: 55ch;
   }
 </style>

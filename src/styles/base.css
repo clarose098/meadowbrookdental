@@ -167,6 +167,35 @@ svg {
   background: transparent;
 }
 
+/* ---- Button interaction ----
+   Hover changes more than colour: the solid button deepens its whole fill and
+   the outline button gains a tinted ground, so the change is visible without
+   relying on a hue shift. Both keep white/ink above 4.5:1 in the hover state,
+   and `--dur` is already 0.01ms under prefers-reduced-motion. */
+.btn {
+  transition:
+    background-color var(--dur) var(--ease),
+    box-shadow var(--dur) var(--ease),
+    transform var(--dur) var(--ease);
+}
+
+.btn--solid:hover {
+  /* Flat --teal-deep rather than the gradient: the whole face darkens, which
+     reads more clearly than shifting one end of a sweep. White reaches 6.99:1. */
+  background: var(--teal-deep);
+}
+
+.btn--outline:hover {
+  /* --chip is the same pale disc used behind the icons, so the tint is already
+     part of the system. Ink on it stays past 4.5:1. */
+  background: var(--chip);
+  border-color: var(--teal-deep);
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
 /* ---- Section rhythm ---- */
 .section {
   padding-block: clamp(3rem, 8vw, 6.5rem);

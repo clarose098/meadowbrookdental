@@ -9,18 +9,22 @@ import { testimonials } from "../data/site";
     reaches 5.92:1, the stars 3.15:1 and the idle dots 4.20:1. */}
 <section class="testimonials section" aria-labelledby="testimonials-title">
   <div class="shell">
-    <h2 id="testimonials-title" class="testimonials__title">
-      <span>What our patients say</span>
-    </h2>
+    {/* The teal lives on this card, not on the section. On the section it was
+        full-bleed, which made its border-radius meaningless -- the corners were
+        off-screen. The design insets it to the content width. */}
+    <div class="testimonials__card">
+      <h2 id="testimonials-title" class="testimonials__title">
+        <span>What our patients say</span>
+      </h2>
 
-    <Carousel
-      id="testimonial-carousel"
-      label="Patient reviews"
-      itemNoun="review"
-      count={testimonials.length}
-    >
-      {
-        testimonials.map((item, i) => (
+      <Carousel
+        id="testimonial-carousel"
+        label="Patient reviews"
+        itemNoun="review"
+        count={testimonials.length}
+      >
+        {
+          testimonials.map((item, i) => (
           <figure
             class="testimonial"
             role="group"
@@ -43,19 +47,24 @@ import { testimonials } from "../data/site";
             </blockquote>
             <figcaption>{item.author}</figcaption>
           </figure>
-        ))
-      }
-    </Carousel>
+          ))
+        }
+      </Carousel>
+    </div>
   </div>
 </section>
 
 <style>
   .testimonials {
+    /* The active dot picks up the amber; idle dots stay white. */
+    --carousel-dot-active: var(--star);
+  }
+
+  .testimonials__card {
     background: var(--grad-testimonial);
     color: var(--white);
     border-radius: var(--radius-card);
-    /* The active dot picks up the amber; idle dots stay white. */
-    --carousel-dot-active: var(--star);
+    padding: clamp(2rem, 5vw, 3.5rem) clamp(1.25rem, 4vw, 3.5rem);
   }
 
   /* Rules flanking the label, per the design. They are pure decoration, so

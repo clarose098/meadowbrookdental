@@ -112,10 +112,30 @@ const currentPath = Astro.url.pathname;
     gap: 4px;
     width: 25px;
   }
+  /* Bars fold into a close cross while the panel is open. The button's
+     accessible name stays "Menu" throughout -- aria-expanded already announces
+     open/closed, and renaming the control mid-interaction gives screen reader
+     users a second, redundant signal to reconcile. The cross is for sighted
+     users, who have no equivalent of aria-expanded. */
   .menu-toggle__bars span {
     display: block;
     height: 2px;
     background: var(--ink);
+    transition:
+      transform var(--dur) var(--ease),
+      opacity var(--dur) var(--ease);
+  }
+
+  /* Bars are 2px with a 4px gap, so the outer two travel 6px to meet in the
+     middle before rotating. */
+  .menu-toggle[aria-expanded="true"] .menu-toggle__bars span:nth-child(1) {
+    transform: translateY(6px) rotate(45deg);
+  }
+  .menu-toggle[aria-expanded="true"] .menu-toggle__bars span:nth-child(2) {
+    opacity: 0;
+  }
+  .menu-toggle[aria-expanded="true"] .menu-toggle__bars span:nth-child(3) {
+    transform: translateY(-6px) rotate(-45deg);
   }
 
   .nav__list {

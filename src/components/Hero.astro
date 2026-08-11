@@ -66,6 +66,12 @@ import { site, heroPhotos } from "../data/site";
     align-items: start;
   }
 
+  /* Grid children default to min-width: auto, so anything wide inside them
+     (here the carousel) can push the column past the container. */
+  .hero__inner > * {
+    min-width: 0;
+  }
+
   .hero__copy {
     display: flex;
     flex-direction: column;
