@@ -51,8 +51,13 @@
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
 
-# Photos are likely to be swapped without renaming, so these get a week with a
-# stale-while-revalidate window rather than a year.
+# Photos get a week rather than a year, with a stale-while-revalidate window.
+#
+# These filenames are not fingerprinted, so REPLACING a photo in place does not
+# reach anyone who already has it -- they keep the old bytes until the week is
+# up. This already caught us once: the doctor's portrait was recropped and the
+# old one kept serving from cache. When a photo changes, give it a new filename
+# (dr-soni-v2.jpg) rather than overwriting.
 [[headers]]
   for = "/images/*"
   [headers.values]
