@@ -129,7 +129,17 @@ const currentPath = Astro.url.pathname;
   .nav__list a {
     color: var(--ink);
     text-transform: uppercase;
+    /* No underline at rest: this is navigation, so position and grouping
+       already carry the role, and a row of underlines is noise. It returns on
+       hover and focus. */
+    text-decoration: none;
   }
+  .nav__list a:hover,
+  .nav__list a:focus-visible {
+    text-decoration: underline;
+  }
+  /* Current page is marked by weight as well as aria-current, so it does not
+     depend on colour. */
   .nav__list a[aria-current="page"] {
     font-weight: 700;
   }

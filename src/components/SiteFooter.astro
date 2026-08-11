@@ -13,11 +13,19 @@ const year = new Date().getFullYear();
 <footer class="footer">
   <div class="shell footer__inner">
     <div class="footer__brand">
-      {/* tint=currentColor so it inherits the footer's white. As exported
-          (#2C9CA6) it would sit at 2.13:1 on this ground. */}
-      <Icon name="logo-tooth" width={34} height={42} tint="currentColor" class="footer__mark" />
-      <p class="footer__name">{site.name}</p>
-      <p class="footer__tagline">{site.tagline}</p>
+      {/* Explicit lockup wrapper. This was four siblings in one grid relying on
+          auto-placement, and the tagline ended up stacked under the tooth with
+          the name adrift in the next column. A flex row and an inner stack say
+          what is actually meant: mark beside wordmark. */}
+      <div class="footer__lockup">
+        {/* tint=currentColor so it inherits the footer's white. As exported
+            (#2C9CA6) it would sit at 2.13:1 on this ground. */}
+        <Icon name="logo-tooth" width={34} height={42} tint="currentColor" class="footer__mark" />
+        <span class="footer__wordmark">
+          <span class="footer__name">{site.name}</span>
+          <span class="footer__tagline">{site.tagline}</span>
+        </span>
+      </div>
       <address class="footer__address">
         {site.street},<br />
         {site.locality}, {site.region} {site.postalCode}
@@ -59,15 +67,24 @@ const year = new Date().getFullYear();
   }
 
   .footer__brand {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: 0 0.65rem;
-    align-content: start;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.5rem;
+  }
+  .footer__lockup {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
   }
   .footer__mark {
-    grid-row: 1 / 3;
+    flex: none;
     width: 2.15rem;
     height: 2.6rem;
+  }
+  .footer__wordmark {
+    display: flex;
+    flex-direction: column;
   }
   .footer__name {
     font-family: var(--font-display);
@@ -80,8 +97,6 @@ const year = new Date().getFullYear();
     font-style: italic;
   }
   .footer__address {
-    grid-column: 1 / -1;
-    margin-top: 1.5rem;
     font-style: normal;
     line-height: 1.2;
   }
@@ -108,6 +123,17 @@ const year = new Date().getFullYear();
 
   .footer a {
     color: inherit;
+  }
+
+  /* Navigation, so no underline at rest -- the columns and headings already
+     say these are links. It comes back on hover and focus so the affordance is
+     never absent when someone is actually reaching for one. */
+  .footer__list a {
+    text-decoration: none;
+  }
+  .footer__list a:hover,
+  .footer__list a:focus-visible {
+    text-decoration: underline;
   }
 
   .footer :focus-visible {

@@ -28,10 +28,22 @@
   --teal: #1a787f;
   --teal-deep: #2f606b;
 
-  /* Gradient for solid buttons. Runs deep -> --teal so the white label clears
-     4.5:1 at every point along it. The designed gradient ended at --teal-brand,
-     where white fell to 3.27:1 across the upper third of the button. */
-  --grad-button: linear-gradient(to top, var(--teal-deep) 0%, var(--teal) 71.19%);
+  /* Light end of the button fill. Deliberately lighter than --teal: this only
+     ever sits under white, so it is tuned to the 4.5:1 floor for white
+     (#248189 gives 4.59:1) rather than to --teal's stricter job of also being
+     legible ON cream. Using --teal here flattened the button visibly -- the
+     sweep was 1.51x where the design had 2.70x. This restores it to 1.78x,
+     which is as wide as white-on-teal allows. */
+  --teal-button: #248189;
+
+  /* Gradient for solid buttons. Runs deep -> --teal-button so the white label
+     clears 4.5:1 at every point along it. The designed gradient ended at
+     --teal-brand, where white fell to 3.27:1 across the upper third. */
+  --grad-button: linear-gradient(
+    to top,
+    var(--teal-deep) 0%,
+    var(--teal-button) 71.19%
+  );
 
   /* ---- Ink ---- */
   --ink: #363636;
@@ -78,9 +90,19 @@
   --grad-panel: linear-gradient(
     155deg,
     #f4eee4 0%,
-    #edf1ef 55%,
-    #f7f8f8 100%
+    #eaf0f0 55%,
+    #dfebed 100%
   );
+
+  /* The form card. Was borrowing --grad-hero, which runs to a very pale cyan
+     and left the card barely distinguishable from the section behind it.
+     This keeps the same warm-to-cool idea but stays tinted at both ends.
+
+     Cool end is #eaf3f5 rather than the #e4eff1 it wants to be: at #e4eff1,
+     --teal text lands at 4.44:1. Nothing on the card is teal today, but a card
+     that quietly fails the moment someone adds a teal link is a trap, so the
+     surface is kept safe for it. */
+  --grad-form-card: linear-gradient(150deg, #f6efe3 0%, #eaf3f5 100%);
 
   /* Amber accent, used for the review stars and the active paginator dot.
      Only legible on a dark ground -- see --grad-testimonial. */

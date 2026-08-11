@@ -62,6 +62,12 @@ const Heading = `h${headingLevel}` as "h1" | "h2";
 </section>
 
 <style>
+  /* Lighter than the page cream so this section reads as its own band between
+     the hero above and the services below, which are both --cream. */
+  .about {
+    background: var(--white);
+  }
+
   .about__inner {
     display: grid;
     gap: 1.75rem;
@@ -97,14 +103,20 @@ const Heading = `h${headingLevel}` as "h1" | "h2";
   @media (min-width: 62rem) {
     .about__inner {
       grid-template-columns: 429fr 648fr;
-      grid-template-rows: auto auto 1fr auto;
+      /* The slack row goes LAST, not on `body`. With `1fr` on the body row,
+         any height the photo had over the text was poured into the paragraph
+         row and the buttons were pushed to the bottom of the block, detached
+         from the copy they belong to. An empty trailing row absorbs it
+         instead, so the buttons stay tucked under the text. */
+      grid-template-rows: auto auto auto auto 1fr;
       column-gap: clamp(2rem, 5vw, 3.3rem);
       align-items: start;
       grid-template-areas:
         "photo eyebrow"
         "photo name"
         "photo body"
-        "photo actions";
+        "photo actions"
+        "photo .";
     }
     .about__eyebrow { grid-area: eyebrow; }
     .about__name    { grid-area: name; }

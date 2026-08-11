@@ -17,8 +17,6 @@ export const site = {
 
 /* Emergency line is the same number as the main line in the Figma file. Left as
    designed -- confirm with the practice whether that is intentional. */
-export const emergencyPhone = site.phone;
-export const emergencyPhoneHref = site.phoneHref;
 
 export const nav = [
   { label: "About", href: "/about/" },

@@ -1,10 +1,5 @@
 ---
-import {
-  site,
-  hours,
-  emergencyPhone,
-  emergencyPhoneHref,
-} from "../data/site";
+import { site, hours } from "../data/site";
 
 interface Props {
   headingLevel?: 1 | 2;
@@ -38,10 +33,6 @@ const FormHeading = `h${headingLevel + 1}` as "h2" | "h3";
         <div class="details__row details__row--email">
           <dt>Email</dt>
           <dd><a href={`mailto:${site.email}`}>{site.email}</a></dd>
-        </div>
-        <div class="details__row details__row--emergency">
-          <dt>Emergency line</dt>
-          <dd><a href={emergencyPhoneHref}>{emergencyPhone}</a></dd>
         </div>
         <div class="details__row details__row--hours">
           <dt>Hours</dt>
@@ -108,11 +99,14 @@ const FormHeading = `h${headingLevel + 1}` as "h2" | "h3";
             That is also why there is no "urgent" option in the list below:
             offering one would imply this is a valid channel for urgent care. */}
         <p class="form-urgent">
+          {/* Points at the main line now that the separate emergency number is
+              gone -- they were the same number anyway. The notice itself stays:
+              a form is asynchronous, and someone in pain needs the phone. */}
           {/* Explicit {" "} — Astro strips the trailing space at a line end,
               which runs "please" straight into the link text. */}
           If this is a dental emergency, please{" "}
-          <a href={emergencyPhoneHref}>call us on {emergencyPhone}</a> rather
-          than using this form.
+          <a href={site.phoneHref}>call us on {site.phone}</a> rather than using
+          this form.
         </p>
 
         <div class="field">
@@ -181,29 +175,6 @@ const FormHeading = `h${headingLevel + 1}` as "h2" | "h3";
           />
         </div>
 
-        <div class="field">
-          <label for="message">Message <span aria-hidden="true">*</span></label>
-          <textarea
-            id="message"
-            name="message"
-            rows="5"
-            required
-            aria-describedby="message-note"
-            placeholder="Enter message"></textarea>
-          {/* Tied to the textarea with aria-describedby, so it is announced
-              when the field takes focus rather than only being visible.
-
-              Second sentence is a deliberate addition. Netlify Forms is not
-              HIPAA-eligible and will not sign a BAA, so this field should not
-              be inviting clinical detail. See docs/accessibility.md and the
-              PHI note in the README. */}
-          <p class="field__note" id="message-note">
-            Let us know any questions, or what you&rsquo;d like help with.
-            There&rsquo;s no need to include medical details &mdash; we&rsquo;ll
-            go through those with you when we call.
-          </p>
-        </div>
-
         <button class="btn btn--solid" type="submit">Submit</button>
       </form>
     </div>
@@ -264,14 +235,6 @@ const FormHeading = `h${headingLevel + 1}` as "h2" | "h3";
   .details__row--email::before {
     background-image: url("/icons/detail-2.svg");
   }
-  /* This one ships as the glyph alone -- the strokes outlined into a single
-     filled path -- so its disc is drawn here rather than baked into the file.
-     The other three carry theirs inside the SVG. */
-  .details__row--emergency::before {
-    background-color: var(--chip);
-    background-image: url("/icons/detail-3.svg");
-    background-size: 24px 24px;
-  }
   .details__row--hours::before {
     background-image: url("/icons/detail-4.svg");
   }
@@ -305,10 +268,17 @@ const FormHeading = `h${headingLevel + 1}` as "h2" | "h3";
     font-variant-numeric: tabular-nums;
   }
 
+  /* Was borrowing --grad-hero, whose warm end is --cream -- identical to this
+     section's ground, so the left half of the card disappeared into it.
+     --grad-form-card stays tinted at both ends, and the shadow lifts it off
+     the section the way the hero slider is lifted off its own. */
   .contact__form-card {
-    background: var(--grad-hero);
+    background: var(--grad-form-card);
     border-radius: var(--radius-card);
     padding: clamp(1.5rem, 4vw, 2.5rem);
+    box-shadow:
+      0 1px 2px rgb(47 96 107 / 0.06),
+      0 12px 32px -8px rgb(47 96 107 / 0.16);
   }
 
   .contact__required-note {
@@ -327,11 +297,6 @@ const FormHeading = `h${headingLevel + 1}` as "h2" | "h3";
 
   /* Kept at full --ink rather than a muted grey: it carries the instruction not
      to send medical details, so it needs to be read, not skimmed past. */
-  .field__note {
-    margin: 0;
-    font-size: 1rem;
-    line-height: 1.4;
-  }
 
   form {
     display: flex;

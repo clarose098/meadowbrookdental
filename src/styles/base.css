@@ -29,6 +29,30 @@
   box-sizing: border-box;
 }
 
+/* ---- Links ----
+   There was no global link colour, so any link not given one by its component
+   fell back to the UA's #0000EE, and to purple once visited -- which is what
+   was showing on the phone and email links.
+
+   `inherit` rather than a fixed teal, because links appear on cream, on the
+   dark teal top bar, and on the footer; a single colour cannot serve all
+   three, and inheriting means each context is right by construction.
+
+   That leaves the underline carrying the "this is a link" signal on its own,
+   which is deliberate: it is a non-colour distinction, so it satisfies 1.4.1
+   in body copy where a link sits inside a run of text. Navigation strips it
+   (see the header and footer) because there the grouping and placement make
+   the role obvious and a row of underlines is just noise. */
+a {
+  color: inherit;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+}
+
+a:visited {
+  color: inherit;
+}
+
 body {
   margin: 0;
   background: var(--cream);
