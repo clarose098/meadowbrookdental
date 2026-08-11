@@ -72,6 +72,30 @@
     var(--hero-to) 100%
   );
 
+  /* Decorative panel behind the doctor's photo. Keeps the warm surface values
+     the rest of the build lifted to --cream, because nothing is set on it --
+     no text, no controls, so no contrast minimum applies. */
+  --grad-panel: linear-gradient(
+    155deg,
+    #f4eee4 0%,
+    #edf1ef 55%,
+    #f7f8f8 100%
+  );
+
+  /* Amber accent, used for the review stars and the active paginator dot.
+     Only legible on a dark ground -- see --grad-testimonial. */
+  --star: #efb078;
+
+  /* The testimonial ground.
+     Figma runs this #2c9ca6 -> #256871, and at the light end that breaks three
+     things at once: the amber stars fall to 1.74:1, the idle dots to 2.32:1,
+     and the section label to 3.27:1 against the 4.5:1 it needs at 18px bold.
+     The stars are the binding constraint -- amber needs a background luminance
+     at or below 0.136 to clear 3:1, which no teal near #2c9ca6 can offer.
+     Dropping the light end to #1f6e75 fixes all three, and as a bonus the
+     label then passes at its designed 18px with no size bump. */
+  --grad-testimonial: linear-gradient(180deg, #1f6e75 0%, #143f47 100%);
+
   /* ---- Type ---- */
   --font-display: "PT Serif", Georgia, "Times New Roman", serif;
   --font-body: "PT Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;

@@ -67,8 +67,11 @@ const Heading = `h${headingLevel}` as "h1" | "h2";
     gap: 1.75rem;
   }
 
+  /* --cream-dim was lifted to --cream for contrast reasons, which left this
+     panel invisible against the page. It carries no text, so it takes the
+     designed warm-to-cool gradient instead. */
   .about__photo {
-    background: var(--cream-dim);
+    background: var(--grad-panel);
     border-radius: var(--radius-card);
     padding: clamp(1rem, 3vw, 2.2rem);
   }

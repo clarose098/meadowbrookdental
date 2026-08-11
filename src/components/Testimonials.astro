@@ -3,15 +3,14 @@ import Carousel from "./Carousel.astro";
 import { testimonials } from "../data/site";
 ---
 
-{/* This section keeps --teal-brand as its ground. Every piece of text on it is
-    24px or larger, which is WCAG's large-text threshold, so the 3:1 minimum
-    applies rather than 4.5:1 -- and white on --teal-brand is 3.27:1. The
-    carousel arrows and dots inherit white too, and 3.27:1 clears the 3:1
-    needed for non-text controls. */}
+{/* Ground is --grad-testimonial, which is materially darker than the Figma
+    original. The reasoning lives on the token; the short version is that the
+    amber stars are illegible on a teal that light. On this ground white text
+    reaches 5.92:1, the stars 3.15:1 and the idle dots 4.20:1. */}
 <section class="testimonials section" aria-labelledby="testimonials-title">
   <div class="shell">
     <h2 id="testimonials-title" class="testimonials__title">
-      What our patients say
+      <span>What our patients say</span>
     </h2>
 
     <Carousel
@@ -52,18 +51,39 @@ import { testimonials } from "../data/site";
 
 <style>
   .testimonials {
-    background: var(--teal-brand);
+    background: var(--grad-testimonial);
     color: var(--white);
     border-radius: var(--radius-card);
+    /* The active dot picks up the amber; idle dots stay white. */
+    --carousel-dot-active: var(--star);
   }
 
+  /* Rules flanking the label, per the design. They are pure decoration, so
+     they carry no contrast requirement and sit at a soft white. */
   .testimonials__title {
-    text-align: center;
-    font-size: var(--step-h3);
+    display: flex;
+    align-items: center;
+    gap: clamp(1rem, 4vw, 2.5rem);
+    font-size: var(--step-body);
+    font-weight: 700;
     text-transform: uppercase;
     font-family: var(--font-body);
-    letter-spacing: 0.04em;
+    letter-spacing: 0.08em;
+    line-height: 1.2;
     margin-bottom: clamp(1.5rem, 4vw, 2.5rem);
+  }
+
+  .testimonials__title::before,
+  .testimonials__title::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: rgb(255 255 255 / 0.45);
+  }
+
+  .testimonials__title span {
+    flex: none;
+    text-align: center;
   }
 
   .testimonial {
@@ -80,6 +100,7 @@ import { testimonials } from "../data/site";
   }
 
   .testimonial__stars {
+    color: var(--star);
     font-size: 1.3rem;
     letter-spacing: 0.25em;
   }

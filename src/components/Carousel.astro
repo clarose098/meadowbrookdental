@@ -156,13 +156,23 @@ const { id, label, itemNoun, count } = Astro.props;
     height: 11px;
     padding: 0;
     border-radius: 50%;
-    border: 1px solid currentColor;
+    /* Explicit inherit: a <button> takes `color: buttontext` from the UA
+       stylesheet rather than inheriting, so currentColor here resolved to
+       black and the idle dots came out black on the teal. */
+    color: inherit;
+    border: 1px solid var(--carousel-dot, currentColor);
     background: transparent;
     cursor: pointer;
   }
-  /* State is carried by fill AND by aria-current, never by colour alone. */
+  /* State is carried by FILL as well as colour, and by aria-current for
+     assistive tech. The Figma paginator distinguishes the active dot by hue
+     alone -- amber against grey -- and those two sit 1.33:1 apart in
+     luminance, so in greyscale or to a colour-blind user they are the same
+     dot. Filling the active one is the fix, and it is why the amber here is
+     an accent on top of the state rather than the state itself. */
   .carousel__dots button[aria-current="true"] {
-    background: currentColor;
+    background: var(--carousel-dot-active, currentColor);
+    border-color: var(--carousel-dot-active, currentColor);
   }
 </style>
 
