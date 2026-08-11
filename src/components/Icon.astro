@@ -32,6 +32,14 @@ let svg = fs.readFileSync(file, "utf8");
    glyph whenever the rendered box is not exactly the exported ratio. */
 svg = svg.replace(/\s*preserveAspectRatio="none"/g, "");
 
+/* Figma also ships style="display: block" and overflow="visible" on the root.
+   The inline style beats any stylesheet rule, so a media query trying to hide
+   an icon silently lost to it -- which is exactly what happened to the mobile
+   service icons. overflow="visible" lets the glyph paint outside its own box.
+   Neither belongs in the shipped markup. */
+svg = svg.replace(/\s*style="[^"]*"/, "");
+svg = svg.replace(/\s*overflow="visible"/, "");
+
 /* Its own width/height attributes would win over CSS sizing. */
 svg = svg.replace(/^(<svg[^>]*?)\swidth="[^"]*"/, "$1");
 svg = svg.replace(/^(<svg[^>]*?)\sheight="[^"]*"/, "$1");

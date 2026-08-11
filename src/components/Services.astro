@@ -79,14 +79,14 @@ const CardHeading = `h${headingLevel + 1}` as "h2" | "h3";
     gap: 1rem;
   }
 
-  .service__icon {
+  :global(.service__icon) {
     flex: none;
   }
 
   /* The mobile frame lists the services as plain text with no icons; they
      appear only once the cards do. */
   @media (max-width: 47.99rem) {
-    .service__icon {
+    :global(.service__icon) {
       display: none;
     }
   }
