@@ -121,20 +121,53 @@ import { testimonials } from "../data/site";
     letter-spacing: 0.25em;
   }
 
+  /* 72ch rather than 60. Still inside the 45-75ch the readability guidance
+     gives, and it matches the 882px the Figma file allowed the quote. */
   .testimonial blockquote {
     margin: 0;
-    max-width: 60ch;
+    max-width: 72ch;
+
+    /* Curly marks via generated content rather than baked into the data, so the
+       quotes stay clean prose and a multi-paragraph review opens once and
+       closes once rather than per paragraph. Second pair is the nested set --
+       Juli's review contains its own 'dental crisis'. */
+    quotes: "\201C" "\201D" "\2018" "\2019";
   }
 
   .testimonial blockquote p {
     font-family: var(--font-display);
     font-size: 24px;
     line-height: var(--leading-body);
+    margin: 0;
   }
 
+  .testimonial blockquote p + p {
+    margin-top: 0.9em;
+  }
+
+  .testimonial blockquote p:first-of-type::before {
+    content: open-quote;
+  }
+
+  .testimonial blockquote p:last-of-type::after {
+    content: close-quote;
+  }
+
+  /* Deliberately unlike the quote above it: the attribution is the sans face at
+     body size, uppercase and letterspaced, so it reads as a label rather than a
+     continuation of the sentence. Stays white -- the amber would be 3.15:1 here,
+     under the 4.5:1 this size needs. */
   .testimonial figcaption {
+    font-family: var(--font-body);
     font-weight: 700;
-    font-size: 24px;
+    font-size: var(--step-body);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .testimonial figcaption::before {
+    content: "\2014\00a0";
+    opacity: 0.7;
   }
 
   .testimonials :focus-visible {

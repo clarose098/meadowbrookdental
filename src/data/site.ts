@@ -18,6 +18,22 @@ export const site = {
 /* Emergency line is the same number as the main line in the Figma file. Left as
    designed -- confirm with the practice whether that is intentional. */
 
+/* Social profiles. `url` stays null until the practice actually creates each
+   account: a null renders a non-interactive chip rather than a link to nowhere,
+   so nothing focusable-but-dead ships. Fill the url in and it becomes a real
+   link with no other change.
+
+   `initial` is a stand-in mark, not the brand logo. Facebook, Yelp and Google
+   each publish official SVGs under their own brand guidelines, and drawing an
+   approximation from memory produces a subtly wrong mark that breaches those
+   terms and looks it. Drop the real assets into public/icons and swap this for
+   an <Icon> when they arrive. */
+export const social = [
+  { name: "Facebook", initial: "f", url: null as string | null },
+  { name: "Yelp", initial: "Y", url: null as string | null },
+  { name: "Google", initial: "G", url: null as string | null },
+];
+
 export const nav = [
   { label: "About", href: "/about/" },
   { label: "Services", href: "/services/" },

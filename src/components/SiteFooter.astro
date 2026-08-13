@@ -1,5 +1,5 @@
 ---
-import { site, nav } from "../data/site";
+import { site, nav, social } from "../data/site";
 import Icon from "./Icon.astro";
 
 const year = new Date().getFullYear();
@@ -30,6 +30,35 @@ const year = new Date().getFullYear();
         {site.street},<br />
         {site.locality}, {site.region} {site.postalCode}
       </address>
+
+      <div class="footer__social">
+        {social.some((s) => !s.url) && (
+          <span class="placeholder-badge">Placeholder</span>
+        )}
+        <ul class="footer__social-list">
+          {social.map((item) => (
+            <li>
+              {item.url ? (
+                <a class="social" href={item.url}>
+                  <span aria-hidden="true">{item.initial}</span>
+                  <span class="visually-hidden">
+                    {site.name} on {item.name}
+                  </span>
+                </a>
+              ) : (
+                /* A span, not an <a href="#">: an empty link is focusable,
+                   announces as a link and does nothing. */
+                <span class="social social--pending">
+                  <span aria-hidden="true">{item.initial}</span>
+                  <span class="visually-hidden">
+                    {item.name} — account not set up yet
+                  </span>
+                </span>
+              )}
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
 
     <nav class="footer__col" aria-label="Footer">
@@ -99,6 +128,50 @@ const year = new Date().getFullYear();
   .footer__address {
     font-style: normal;
     line-height: 1.2;
+  }
+
+  .footer__social {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.7rem;
+  }
+
+  .footer__social-list {
+    display: flex;
+    gap: 0.6rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* 44px square: past the 24x24 minimum in 2.5.8, and a comfortable touch
+     target once these are live links. Border sits at 55% white for 3.33:1 on
+     this ground -- above the 3:1 a UI boundary needs. */
+  .social {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 1px solid rgb(255 255 255 / 0.55);
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: 1.05rem;
+    line-height: 1;
+    text-decoration: none;
+    transition: background-color var(--dur) var(--ease);
+  }
+
+  a.social:hover,
+  a.social:focus-visible {
+    background: rgb(255 255 255 / 0.14);
+  }
+
+  /* Not a link yet, so it should not look clickable. */
+  .social--pending {
+    opacity: 0.75;
+    cursor: default;
   }
 
   .footer__heading {
