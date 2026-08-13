@@ -48,6 +48,29 @@ export const social = [
   },
 ];
 
+/* Dr. Soni's full biography, taken from the practice's own previous site
+   (Wayback capture of familydentistryofshelby.com, archived locally in
+   ~/Documents/Claude/Projects/Dr Soni Dental Website). Kept close to her own
+   wording — this is her copy, not ours — with only light edits for flow.
+
+   The old site is Shelby Township; nothing in the biography itself names a
+   location, so there was nothing to swap here. What deliberately does NOT
+   carry over is that site's address and phone number: 46671 Hayes Road and
+   (586) 566-3880 belong to the old practice.
+
+   The homepage carries a condensed version of this in AboutDoctor. */
+export const doctorBio = [
+  "Dr. Tejal Soni grew up in India and graduated as a dentist in 1996. She practiced in India until 2000, when she moved to the United States. She has been a proud Michigander ever since, and has called Metro Detroit home since the day she arrived.",
+  "She returned to study in 2002 at New York University, completing her Doctor of Dental Surgery in 2005 and graduating with honors in special-needs care and implantology. After further education at NYU she was licensed to practice in the State of Michigan, and has been providing dental care here since 2005.",
+  "Dr. Soni is certified in Invisalign, and while she thoroughly enjoys every aspect of general dentistry, she especially loves doing root canals that bring her patients comfort. Her favorite part of dentistry is seeing patients free of dental problems — she takes pride in knowing they leave the clinic with the best experience possible and the best treatment for their oral health.",
+  "She enjoys lifelong learning and routinely takes classes on the latest dental technology and techniques. Dr. Soni is a member of the American Dental Association and the Michigan Dental Association, and an active member of the Macomb Dental Society.",
+  "Dr. Soni grew up with four siblings in India, and shares a special bond with her twin sister — also a dentist, practicing in India. She is proud of the upbringing and the values her parents gave her.",
+  "Dr. Soni and her husband Nilesh live in Troy with their young son, Pratham. In her free time she likes to watch sports with the family and cook for her boys, friends and family.",
+];
+
+/* The practice's own line, carried over from the previous site. */
+export const motto = "Dentistry is our profession, but people are our focus.";
+
 export const nav = [
   { label: "About", href: "/about/" },
   { label: "Services", href: "/services/" },
