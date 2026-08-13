@@ -62,40 +62,55 @@ export const services = [
    badge -- so none of this can reach production unnoticed. Replace the content
    and drop the `placeholder` flag as real material arrives. */
 
+/* Real patient reviews. `quote` may be an array -- each entry renders as its own
+   paragraph, so a longer review keeps the pacing its author gave it.
+
+   Order is deliberate. Andrea leads: it is the only one covering both halves of
+   the audience this practice sells to -- a child who likes the dentist and an
+   anxious adult -- and it closes on a specific thing the practice did rather
+   than a general compliment. Chris and Juli are stronger emotionally but both
+   open on shame or pain, which is a heavy first thing for a stranger to meet.
+   They land better once someone is already reading.
+
+   Wording is the patients' own. The only edits were a misspelling
+   ("embarassed") and hyphens standing in for dashes. */
 export const testimonials = [
+  {
+    quote:
+      "Dr. Soni goes above and beyond for her patients! She communicates very well with my daughter — I've never met another child who LOVES going to the dentist! She is also very patient with me, as someone who has anxiety going to the dentist. I once lost a temporary crown — she squeezed me into her schedule and made me a new temporary crown in no time.",
+    author: "Andrea",
+    rating: 5,
+  },
+  {
+    quote:
+      "Dr. Soni was the first dentist I ever saw when I had started my own dental plan. I had put it off because of money, so when I did go in I was embarrassed. She didn't shame me or focus on the past, instead focusing on the future of my dental care. I've been seeing her for over 20 years.",
+    author: "Chris",
+    rating: 5,
+  },
+  {
+    quote: [
+      "No dentist ever asked about my history or how I ended up in a 'dental crisis,' which caused embarrassment and fear. I put up with pain rather than face any dentist. My adult kids and husband urged me to see their dentist, Dr. Tejal Soni.",
+      "When I couldn't take the pain any longer, I met Dr. Soni. She is everything my kids and husband described: kind, patient, very knowledgeable, skilled, and above all, very caring.",
+      "I highly recommend Dr. Soni, especially if you have fears.",
+    ],
+    author: "Juli",
+    rating: 5,
+  },
   {
     quote:
       "Dr. Soni and her staff did a great job explaining the dental work I needed as well as all the treatment options. The procedure was painless. Prices were reasonable. Would highly recommend.",
     author: "Joseph L.",
     rating: 5,
   },
-  {
-    quote:
-      "Placeholder review. Replace with a real patient review before launch — ideally one that mentions a different service from the others, so the four together cover the range of care.",
-    author: "Patient name",
-    rating: 5,
-    placeholder: true,
-  },
-  {
-    quote:
-      "Placeholder review. Replace with a real patient review before launch — a first-visit or new-patient experience would balance the set well.",
-    author: "Patient name",
-    rating: 5,
-    placeholder: true,
-  },
-  {
-    quote:
-      "Placeholder review. Replace with a real patient review before launch — something about the practice itself, rather than a single procedure.",
-    author: "Patient name",
-    rating: 5,
-    placeholder: true,
-  },
 ];
 
 export const heroPhotos = [
   {
-    src: "/images/office-exterior.jpg",
-    alt: "The Meadowbrook Dental building on Five Points Drive, with parking directly outside the entrance.",
+    /* -v2, not a replacement of office-exterior.jpg: /images/* is cached for a
+       week and these filenames are not fingerprinted, so overwriting would keep
+       serving the old bytes to anyone who had already seen the page. */
+    src: "/images/office-exterior-v2.jpg",
+    alt: "The Meadowbrook Dental storefront at 3421 Five Points Drive. The practice's green sign sits above the entrance, and the window reads \"You'll feel like family here — new patients welcome\".",
     caption: "3421 Five Points Drive in Auburn Hills, MI",
   },
   {

@@ -43,7 +43,14 @@ import { testimonials } from "../data/site";
               <span class="placeholder-badge">Placeholder</span>
             )}
             <blockquote>
-              <p>{item.quote}</p>
+              {/* A quote may be a string or an array of paragraphs, so a longer
+                  review keeps the pacing its author gave it rather than being
+                  flattened into one block. */}
+              {(Array.isArray(item.quote) ? item.quote : [item.quote]).map(
+                (para) => (
+                  <p>{para}</p>
+                ),
+              )}
             </blockquote>
             <figcaption>{item.author}</figcaption>
           </figure>
