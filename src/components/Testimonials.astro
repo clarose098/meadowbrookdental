@@ -136,9 +136,15 @@ import { testimonials } from "../data/site";
 
   .testimonial blockquote p {
     font-family: var(--font-display);
-    font-size: 24px;
+    /* Was a flat 24px, which is a lot of type on a 375px screen. Scales from
+       18px on a phone to the designed 24px at desktop. */
+    font-size: clamp(1.125rem, 0.95rem + 0.8vw, 1.5rem);
     line-height: var(--leading-body);
     margin: 0;
+    /* Keeps a single word off the last line. Better than widening the measure
+       or nudging the size, because it holds for all four reviews at every width
+       rather than fixing one of them at one breakpoint. */
+    text-wrap: pretty;
   }
 
   .testimonial blockquote p + p {

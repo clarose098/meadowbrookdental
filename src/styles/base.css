@@ -49,9 +49,13 @@ a {
   text-underline-offset: 0.2em;
 }
 
-a:visited {
-  color: inherit;
-}
+/* There is deliberately no `a:visited` rule here.
+   It would be redundant -- author styles beat the UA's visited colour on origin
+   alone, so the `a` rule above already covers both states -- and it actively
+   breaks things: `a:visited` scores (0,1,1), which out-specifies `.btn--solid`
+   at (0,1,0). Once a button had been visited its label inherited the
+   surrounding ink and sat at 1.73:1 on the gradient's dark end. Do not add one
+   back; style the states on the component instead. */
 
 body {
   margin: 0;
