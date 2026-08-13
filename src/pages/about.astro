@@ -20,11 +20,14 @@ import { site, doctorBio, motto } from "../data/site";
       <h1 id="bio-title" class="bio__name">Dr. Tejal Soni, DDS</h1>
 
       <div class="bio__photo">
+        {/* -v2 is the recropped portrait; the original filename no longer
+            exists. Dimensions are the file's real 345x434 so the reserved space
+            matches and nothing shifts on load. */}
         <img
-          src="/images/dr-soni.jpg"
+          src="/images/dr-soni-v2.jpg"
           alt="Dr. Tejal Soni, DDS"
-          width="373"
-          height="462"
+          width="345"
+          height="434"
         />
       </div>
 

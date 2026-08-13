@@ -152,10 +152,30 @@ def netlify_form_checks(html, name):
     return problems
 
 
+def asset_checks(html, name):
+    """Every root-relative asset a page references must exist in the build.
+
+    A broken src is invisible to the other checks here -- the img still has its
+    alt, so the markup looks correct -- and it survives all the way to a
+    rendered broken-image icon. This caught /images/dr-soni.jpg on the About
+    page after the portrait had been recropped to a -v2 filename.
+    """
+    problems = []
+    refs = set(re.findall(r'<(?:img|source)\b[^>]*\bsrc="(/[^"]+)"', html))
+    refs |= set(re.findall(r'url\((?:&quot;|["\']?)(/[^"\')]+)', html))
+    for ref in sorted(refs):
+        if ref.startswith('//') or ref.startswith('/http'):
+            continue
+        if not (DIST / ref.lstrip('/')).exists():
+            problems.append(f'references a missing asset: {ref}')
+    return problems
+
+
 total = 0
 for path in sorted(DIST.rglob('*.html')):
     name, problems, _ = check(path)
     html = path.read_text(encoding='utf-8')
+    problems += asset_checks(html, name)
     if '<form' in html:
         problems += netlify_form_checks(html, name)
     total += len(problems)
