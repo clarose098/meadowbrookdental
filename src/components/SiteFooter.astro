@@ -32,24 +32,30 @@ const year = new Date().getFullYear();
       </address>
 
       <div class="footer__social">
-        {social.some((s) => !s.url) && (
-          <span class="placeholder-badge">Placeholder</span>
-        )}
         <ul class="footer__social-list">
           {social.map((item) => (
             <li>
               {item.url ? (
                 <a class="social" href={item.url}>
-                  <span aria-hidden="true">{item.initial}</span>
+                  {item.icon ? (
+                    <Icon name={item.icon} width={20} />
+                  ) : (
+                    <span aria-hidden="true">{item.initial}</span>
+                  )}
                   <span class="visually-hidden">
                     {site.name} on {item.name}
                   </span>
                 </a>
               ) : (
                 /* A span, not an <a href="#">: an empty link is focusable,
-                   announces as a link and does nothing. */
+                   announces as a link and does nothing. Fill the url into
+                   site.ts and this becomes a real link with no other change. */
                 <span class="social social--pending">
-                  <span aria-hidden="true">{item.initial}</span>
+                  {item.icon ? (
+                    <Icon name={item.icon} width={20} />
+                  ) : (
+                    <span aria-hidden="true">{item.initial}</span>
+                  )}
                   <span class="visually-hidden">
                     {item.name} — account not set up yet
                   </span>

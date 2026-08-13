@@ -23,15 +23,29 @@ export const site = {
    so nothing focusable-but-dead ships. Fill the url in and it becomes a real
    link with no other change.
 
-   `initial` is a stand-in mark, not the brand logo. Facebook, Yelp and Google
-   each publish official SVGs under their own brand guidelines, and drawing an
-   approximation from memory produces a subtly wrong mark that breaches those
-   terms and looks it. Drop the real assets into public/icons and swap this for
-   an <Icon> when they arrive. */
+   `icon` names a file in public/icons. Where it is null the chip falls back to
+   `initial` -- a lettered stand-in, not an approximation of the brand mark.
+   Facebook publishes an official SVG under its own brand guidelines and drawing
+   one from memory gives a subtly wrong logo, so it waits for the real asset. */
 export const social = [
-  { name: "Facebook", initial: "f", url: null as string | null },
-  { name: "Yelp", initial: "Y", url: null as string | null },
-  { name: "Google", initial: "G", url: null as string | null },
+  {
+    name: "Facebook",
+    initial: "f",
+    icon: null as string | null,
+    url: null as string | null,
+  },
+  {
+    name: "Yelp",
+    initial: "Y",
+    icon: "yelp" as string | null,
+    url: null as string | null,
+  },
+  {
+    name: "Google",
+    initial: "G",
+    icon: "google" as string | null,
+    url: null as string | null,
+  },
 ];
 
 export const nav = [
@@ -41,12 +55,18 @@ export const nav = [
   { label: "Contact", href: "/contact/" },
 ];
 
+/* All seven days, including the closed ones. The Figma file lists Monday to
+   Friday only, which now that Wednesday and Friday are closed would leave a
+   patient guessing whether the practice opens at the weekend. Saying "Closed"
+   answers the question the list is there to answer. */
 export const hours = [
-  { day: "Monday", short: "Mon.", time: "8-5PM" },
-  { day: "Tuesday", short: "Tue.", time: "8-5PM" },
-  { day: "Wednesday", short: "Wed.", time: "8-5PM" },
-  { day: "Thursday", short: "Thu.", time: "8-5PM" },
-  { day: "Friday", short: "Fri.", time: "8-5PM" },
+  { day: "Monday", short: "Mon.", time: "8am-6pm" },
+  { day: "Tuesday", short: "Tue.", time: "8am-6pm" },
+  { day: "Wednesday", short: "Wed.", time: "Closed" },
+  { day: "Thursday", short: "Thu.", time: "8am-6pm" },
+  { day: "Friday", short: "Fri.", time: "Closed" },
+  { day: "Saturday", short: "Sat.", time: "Closed" },
+  { day: "Sunday", short: "Sun.", time: "Closed" },
 ];
 
 export const services = [
