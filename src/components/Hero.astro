@@ -64,10 +64,10 @@ import { site, heroPhotos } from "../data/site";
   .hero__inner {
     display: grid;
     gap: clamp(2rem, 5vw, 4rem);
-    /* start, not center: the copy should hang from the same line as the top of
-       the slider. Centring only looked right when the two columns happened to
-       be the same height. */
-    align-items: start;
+    /* Copy sits centred against the slider. This does not change the row's
+       height -- that is still set by whichever column is taller -- so the
+       controls stay where they are relative to the fold. */
+    align-items: center;
   }
 
   /* Grid children default to min-width: auto, so anything wide inside them
@@ -82,8 +82,13 @@ import { site, heroPhotos } from "../data/site";
     gap: 1.75rem;
   }
 
+  /* No measure cap: the lede fills the column exactly as the heading does, so
+     the two share a right edge instead of leaving a ragged gap beside the
+     paragraph. Safe to drop here because the column itself is the constraint --
+     at its widest the line runs about 68 characters, still inside the 45-75
+     readability range. Do not reuse this on a full-width block. */
   .hero__lede {
-    max-width: 34ch;
+    max-width: none;
   }
 
   .hero__actions {
