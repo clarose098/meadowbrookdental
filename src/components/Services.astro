@@ -55,13 +55,26 @@ const CardHeading = `h${headingLevel + 1}` as "h2" | "h3";
     gap: clamp(2rem, 5vw, 3.5rem);
   }
 
+  /* 48rem rather than 60ch. At 60ch the intro sentence broke one word early and
+     left "welcoming." alone on its own line; this holds it on a single line and
+     puts the section heading back on one line too, which is how the Figma file
+     sets them. Wide for running text, but this is one short centred sentence,
+     not a paragraph anyone reads at length. */
   .services__intro {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 0.875rem;
     text-align: center;
-    max-width: 60ch;
+    max-width: 48rem;
+  }
+
+  /* Between the two breakpoints the sentence still has to wrap somewhere.
+     `pretty` tells the browser to avoid leaving a single word on the last line,
+     so the orphan cannot come back at an intermediate width. Unsupported
+     browsers just wrap normally. */
+  .services__intro > p:last-of-type {
+    text-wrap: pretty;
   }
 
   .services__list {
