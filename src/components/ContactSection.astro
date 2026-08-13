@@ -360,12 +360,20 @@ const FormHeading = `h${headingLevel + 1}` as "h2" | "h3";
     border-width: 2px;
   }
 
+  /* display:none, not off-screen.
+     Positioned at -9999px this field was still rendered and live, and password
+     managers and browser autofill happily populate off-screen inputs --
+     autocomplete="off" is advisory and widely ignored. A filled bot-field makes
+     Netlify class the submission as spam: it is recorded but no notification is
+     sent, so a real patient's request lands in the dashboard and nobody hears
+     about it.
+
+     A sophisticated bot can detect display:none and skip the field, so this
+     trades a little spam-catching for reliability. That is the right way round
+     here -- the cost of a false positive is a missed appointment request, and
+     the cost of a false negative is one junk entry someone deletes. */
   .honeypot {
-    position: absolute;
-    left: -9999px;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
+    display: none;
   }
 
   @media (min-width: 62rem) {
