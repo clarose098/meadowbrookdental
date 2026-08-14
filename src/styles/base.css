@@ -255,8 +255,17 @@ svg {
    exactly as it did before, which is the correct degradation for decoration. */
 @media (prefers-reduced-motion: no-preference) {
   @supports (animation-timeline: view()) {
+    /* Longhands, never the `animation` shorthand.
+
+       The shorthand does not accept a timeline value, but the CSS minifier
+       will happily fold `animation` and `animation-timeline` together into
+       `animation: linear both section-reveal view()` — which is invalid, so
+       the browser drops the whole declaration and no animation runs at all.
+       Writing longhands keeps the minifier from producing that merge. */
     main > section > .shell {
-      animation: section-reveal linear both;
+      animation-name: section-reveal;
+      animation-fill-mode: both;
+      animation-timing-function: linear;
       animation-timeline: view();
       /* Finishes well before the section is centred, so it has settled by the
          time it is actually being read. A section already in view at load
