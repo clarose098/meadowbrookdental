@@ -140,11 +140,11 @@
 
   /* ---- Layout ---- */
   --gutter: clamp(1.25rem, 4vw, 3.75rem);  /* 20 -> 60px page padding */
-  /* Figma drew content at 1320 inside a 1440 frame. Widened to 1440 so the
-     header has room on larger screens -- note this has no effect below a
-     ~1560px viewport, where the gutters are the binding constraint, so the
-     header's own gap tuning is what fixes crowding at common laptop sizes. */
-  --measure: 1440px;
+  /* Figma's content width inside a 1440 frame. Briefly widened to 1440 to give
+     the header room; reverted because it widened every section with it,
+     including the contact form block, and the header crowding was really a
+     gap-ratio problem in the nav rather than a width problem. */
+  --measure: 1320px;
   --radius-pill: 75px;
   --radius-card: 24px;
 

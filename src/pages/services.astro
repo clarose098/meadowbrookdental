@@ -154,15 +154,14 @@ import { services, site } from "../data/site";
     margin-inline: auto;
   }
 
-  /* Same 50/50 split and same breakpoint as the contact block, but the 1140px
-     cap above means the two no longer share a second-column edge -- the
-     contact block still runs the full measure.
+  /* Same 50/50 split, same gap and same breakpoint as the contact block, which
+     is what keeps their second columns on a shared edge.
 
-     That is a deliberate trade, not a regression: the sections were asked to
-     come in tighter, and nothing applied to this grid can narrow it while also
-     holding an edge shared with a wider block. Capping the contact block to
-     1140 as well would restore the alignment, at the cost of narrowing the
-     form on the homepage and the contact page too. */
+     That holds at any width, including with the 1140px cap above. Both grids
+     are centred, so each one's midpoint is the page centre, and the second
+     column therefore starts at viewportWidth/2 + gap/2 regardless of how wide
+     the grid itself is. Change either grid's GAP and the alignment breaks;
+     changing its width does not. */
   @media (min-width: 62rem) {
     .svc__inner {
       grid-template-columns: 1fr 1fr;
