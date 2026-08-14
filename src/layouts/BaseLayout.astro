@@ -74,9 +74,6 @@ const { title, description } = Astro.props;
       const root = document.documentElement;
 
       if (root.classList.contains("js-motion")) {
-        /* The module reached the page, so the inline failsafe is not needed. */
-        window.clearTimeout((window as any).__revealFailsafe);
-
         const targets = Array.from(
           document.querySelectorAll<HTMLElement>("main > section > .shell"),
         );
@@ -90,6 +87,15 @@ const { title, description } = Astro.props;
         if ("IntersectionObserver" in window) {
           const io = new IntersectionObserver(
             (entries, obs) => {
+              /* Cleared on the observer's FIRST callback, not when this module
+                 runs. Those are different facts: an environment can support
+                 IntersectionObserver and still never fire it, in which case
+                 clearing on module execution would leave every section below
+                 the fold permanently at opacity 0. Waiting for real evidence
+                 that the observer works means the worst case is losing the
+                 animation, never the content. */
+              window.clearTimeout((window as any).__revealFailsafe);
+
               entries.forEach((entry) => {
                 if (entry.isIntersecting) {
                   reveal(entry.target as HTMLElement);
