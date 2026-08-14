@@ -113,6 +113,87 @@ export const hours = [
    - The old Preventive page carried specific decay statistics with no source.
      Repeating unsourced figures as fact is not worth the risk; the actionable
      advice they introduced is kept. */
+/* ---- New patients ----
+   The practice's old /new-patients/ page was not among the archived captures,
+   so none of this is mirrored copy. Everything below is either grounded in
+   something the site already states, or marked `unconfirmed` and rendered with
+   a visible badge.
+
+   `file: null` on the forms packet renders a non-interactive block rather than
+   a link to a PDF that does not exist yet. Set the path and it becomes a real
+   download with no other change. */
+export const newPatientSteps = [
+  {
+    title: "Get in touch",
+    body: "Call the practice or send the appointment request form. We'll ring you back to confirm a time, usually within one business day.",
+  },
+  {
+    title: "Fill in your forms",
+    body: "Complete the new patient packet before you arrive if you can. If that's difficult, bring nothing at all — you're welcome to fill them in at the practice, or ask us to post or email them to you.",
+  },
+  {
+    title: "Your first visit",
+    body: "Dr. Soni checks every tooth and the tissue around it, assesses plaque levels, and screens for oral cancer and jaw (TMJ) problems. A first visit may include a full set of X-rays to find anything not visible from the surface.",
+  },
+  {
+    title: "Before anything is started",
+    body: "Whatever she finds, the plan is explained in full — and the cost with it — before any work begins. Most first visits also include a professional cleaning.",
+  },
+];
+
+export const newPatientForms = {
+  /* Set this to e.g. "/forms/meadowbrook-new-patient-packet.pdf" once it
+     exists. Until then the block renders as plain text with a badge. */
+  file: null as string | null,
+  formCount: 5,
+};
+
+export const newPatientBring = [
+  "Photo ID",
+  "Your insurance card, if you have one",
+  "A list of any medications you take",
+  "Your completed forms, if you filled them in beforehand",
+];
+
+/* `unconfirmed: true` marks an answer that is a reasonable inference rather
+   than something the practice has stated. Those render with a badge so they
+   cannot quietly ship as fact. */
+export const faqs = [
+  {
+    q: "Are you accepting new patients?",
+    a: "Yes. The practice is taking new patients of every age, and has been for some time — it says so on the window.",
+  },
+  {
+    q: "It has been years since I saw a dentist. Is that a problem?",
+    a: "No, and you will not be lectured about it. Several of Dr. Soni's long-standing patients first came to her after putting treatment off, some for years. She is interested in where your teeth go from here rather than how they got this way.",
+  },
+  {
+    q: "I get anxious about dental visits. Can you help?",
+    a: "Yes. Tell us when you book and again when you arrive. Dr. Soni is used to working with nervous patients and will explain what she is doing as she goes, stopping whenever you need her to.",
+  },
+  {
+    q: "Do you see children?",
+    a: "Yes. Dr. Soni treats patients of every age and often sees whole families together, so you can bring children to the same practice you use yourself.",
+  },
+  {
+    q: "Do you take my insurance?",
+    a: "Most major insurance is welcome. Plans differ enough that it is worth a quick call with your plan details before your visit, and we will confirm what is covered.",
+  },
+  {
+    q: "What should I bring to my first visit?",
+    a: "Photo ID, your insurance card if you have one, and a list of any medications you take. Bring your completed forms if you filled them in beforehand — and if you did not, that is fine.",
+  },
+  {
+    q: "What if I have a dental emergency?",
+    a: "Call the practice rather than using the appointment form. A form may not be read until the next working day, and that is not how anyone in pain should be waiting.",
+  },
+  {
+    q: "Is there parking?",
+    a: "Yes — there is parking directly outside the entrance on Five Points Drive.",
+    unconfirmed: true,
+  },
+];
+
 export const services = [
   {
     slug: "family-dentistry",

@@ -1,28 +1,129 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import ContactSection from "../components/ContactSection.astro";
-import { site } from "../data/site";
+import {
+  site,
+  faqs,
+  newPatientSteps,
+  newPatientForms,
+  newPatientBring,
+} from "../data/site";
 ---
 
-{/* Stub -- see about.astro. Unlike the other stubs this one gets its own h1
-    rather than promoting the reused section's heading, because "Come visit our
-    Auburn Hills office" is not what this page is about. Needs real content from
-    the practice: what to bring, insurance accepted, first-visit expectations. */}
 <BaseLayout
   title="New Patients"
-  description="Accepting new patients. Most insurance welcome. Here's what to expect on your first visit to Meadowbrook Dental."
+  description="What to expect on your first visit to Meadowbrook Dental in Auburn Hills, plus new patient forms and answers to common questions."
 >
-  <section class="section" aria-labelledby="new-patients-title">
-    <div class="shell intro">
-      <p class="eyebrow">Welcome</p>
-      <h1 id="new-patients-title">New patients are always welcome</h1>
-      <p>
-        We&rsquo;re accepting new patients and most insurance is welcome. Get in
-        touch and we&rsquo;ll walk you through everything before your first
-        visit &mdash; or call us on{" "}
-        <a href={site.phoneHref}>{site.phone}</a> if you&rsquo;d rather talk it
-        through.
-      </p>
+  <section class="intro section" aria-labelledby="new-patients-title">
+    <div class="shell intro__inner">
+      <div class="intro__welcome">
+        <p class="eyebrow">New patients</p>
+        <h1 id="new-patients-title">You&rsquo;ll feel like family here</h1>
+        <p class="intro__lede">
+          Whether it has been six months or fifteen years, you are welcome at
+          {site.name}. Here is exactly what happens, so nothing about your
+          first visit is a surprise.
+        </p>
+
+        <h2 class="steps__heading">What to expect</h2>
+
+        {/* An ordered list because the steps genuinely are a sequence — the
+            numbering carries real information rather than decorating it.
+            Titles are h3 under that h2 so they nest inside this column rather
+            than reading as siblings of the resources panel beside it. */}
+        <ol class="steps">
+          {
+            newPatientSteps.map((step) => (
+              <li class="steps__item">
+                <h3 class="steps__title">{step.title}</h3>
+                <p>{step.body}</p>
+              </li>
+            ))
+          }
+        </ol>
+      </div>
+
+      <aside class="resources" aria-labelledby="resources-title">
+        <h2 id="resources-title">Forms and resources</h2>
+
+        <div class="resources__block">
+          <h3>New patient forms</h3>
+          {
+            newPatientForms.file ? (
+              <>
+                <p>
+                  One packet of {newPatientForms.formCount} forms. Fill it in
+                  before you arrive and your first visit starts sooner.
+                </p>
+                <a class="btn btn--solid" href={newPatientForms.file} download>
+                  Download the packet
+                </a>
+              </>
+            ) : (
+              /* Not an <a> — a link to a file that does not exist yet is a
+                 broken download, and it is focusable and announces as a link
+                 while doing nothing. */
+              <>
+                <p>
+                  One packet of {newPatientForms.formCount} forms, coming
+                  shortly. In the meantime, call the practice and we will post
+                  or email them to you &mdash; or simply fill them in when you
+                  arrive.
+                </p>
+                <p class="resources__pending">
+                  <span class="placeholder-badge">Placeholder</span>
+                  <span>Download link goes live once the PDF is supplied</span>
+                </p>
+              </>
+            )
+          }
+        </div>
+
+        <div class="resources__block">
+          <h3>What to bring</h3>
+          <ul class="resources__list">
+            {newPatientBring.map((item) => <li>{item}</li>)}
+          </ul>
+        </div>
+
+        <div class="resources__block">
+          <h3>Prefer to ask a person?</h3>
+          <p>
+            Call <a href={site.phoneHref}>{site.phone}</a> or email{" "}
+            <a href={`mailto:${site.email}`}>{site.email}</a>. We are happy to
+            walk you through any of it before you commit to an appointment.
+          </p>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <section class="faq section" aria-labelledby="faq-title">
+    <div class="shell faq__inner">
+      <h2 id="faq-title">Frequently asked questions</h2>
+
+      {/* Native <details>, so this needs no JavaScript and is keyboard
+          operable and announced as expanded/collapsed for free. The heading
+          sits inside <summary>, which the spec allows, so each question still
+          appears in a screen reader's heading list — a plain-text summary
+          would drop them all out of it. */}
+      <div class="faq__list">
+        {
+          faqs.map((item) => (
+            <details class="faq__item">
+              <summary>
+                <h3>{item.q}</h3>
+              </summary>
+              <div class="faq__answer">
+                {item.unconfirmed && (
+                  <span class="placeholder-badge">Unconfirmed</span>
+                )}
+                <p>{item.a}</p>
+              </div>
+            </details>
+          ))
+        }
+      </div>
     </div>
   </section>
 
@@ -31,9 +132,210 @@ import { site } from "../data/site";
 
 <style>
   .intro {
+    background: var(--grad-hero);
+  }
+
+  .intro__inner {
+    display: grid;
+    gap: clamp(2.5rem, 6vw, 4rem);
+    align-items: start;
+    max-width: calc(1140px + var(--gutter) * 2);
+    margin-inline: auto;
+  }
+
+  /* Same 1fr 1fr and the same gap as the services and contact grids, so every
+     two-column block on the site shares a second-column edge. */
+  @media (min-width: 62rem) {
+    .intro__inner {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .intro__welcome {
     display: flex;
     flex-direction: column;
+    gap: 0.875rem;
+  }
+
+  .intro__lede {
+    margin: 0;
+    max-width: 46ch;
+    text-wrap: pretty;
+  }
+
+  .steps__heading {
+    margin: 1.25rem 0 0;
+    font-size: var(--step-h3);
+  }
+
+  .steps {
+    list-style: none;
+    counter-reset: step;
+    margin: 0.5rem 0 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .steps__item {
+    counter-increment: step;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    column-gap: 1rem;
+    row-gap: 0.35rem;
+    max-width: 46ch;
+  }
+
+  /* The number is generated, so it is presentation only — the <ol> already
+     carries the sequence for assistive tech and would otherwise announce it
+     twice. */
+  .steps__item::before {
+    content: counter(step);
+    grid-row: 1 / 3;
+    display: grid;
+    place-items: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 50%;
+    background: var(--chip);
+    color: var(--teal);
+    font-weight: 700;
+    font-size: var(--step-small);
+  }
+
+  .steps__title {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: var(--step-body);
+    font-weight: 700;
+    line-height: 1.2;
+    align-self: center;
+  }
+
+  .steps__item p {
+    margin: 0;
+    text-wrap: pretty;
+  }
+
+  .resources {
+    display: flex;
+    flex-direction: column;
+    gap: 1.75rem;
+    background: var(--white);
+    border-radius: var(--radius-card);
+    padding: clamp(1.5rem, 3vw, 2.5rem);
+  }
+
+  .resources h2 {
+    margin: 0;
+    font-size: var(--step-h3);
+  }
+
+  .resources h3 {
+    margin: 0 0 0.5rem;
+    font-family: var(--font-body);
+    font-size: var(--step-body);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--teal);
+  }
+
+  .resources__block p {
+    margin: 0 0 0.875rem;
+    text-wrap: pretty;
+  }
+
+  .resources__block p:last-child {
+    margin-bottom: 0;
+  }
+
+  .resources__list {
+    margin: 0;
+    padding-left: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .resources__pending {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: var(--step-small);
+  }
+
+  /* ---- FAQ ---- */
+  .faq__inner {
+    max-width: calc(1140px + var(--gutter) * 2);
+    margin-inline: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .faq__list {
+    display: flex;
+    flex-direction: column;
+    border-top: 1px solid rgb(54 54 54 / 0.14);
+  }
+
+  .faq__item {
+    border-bottom: 1px solid rgb(54 54 54 / 0.14);
+  }
+
+  .faq__item summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     gap: 1rem;
-    max-width: 60ch;
+    padding: 1.125rem 0;
+    cursor: pointer;
+    /* Removes the default disclosure triangle in both engines so the chevron
+       below is the only marker. */
+    list-style: none;
+  }
+
+  .faq__item summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .faq__item summary h3 {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: var(--step-body);
+    font-weight: 700;
+    line-height: 1.3;
+  }
+
+  .faq__item summary::after {
+    content: "";
+    flex: none;
+    width: 0.7rem;
+    height: 0.7rem;
+    border-right: 2px solid var(--teal);
+    border-bottom: 2px solid var(--teal);
+    transform: rotate(45deg) translate(-0.15rem, -0.15rem);
+    transition: transform var(--dur) var(--ease);
+  }
+
+  .faq__item[open] summary::after {
+    transform: rotate(225deg) translate(-0.15rem, -0.15rem);
+  }
+
+  .faq__answer {
+    padding: 0 0 1.4rem;
+    max-width: 68ch;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.6rem;
+  }
+
+  .faq__answer p {
+    margin: 0;
+    text-wrap: pretty;
   }
 </style>
