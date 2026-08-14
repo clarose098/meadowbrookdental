@@ -125,6 +125,14 @@ const { id, label, itemNoun, count } = Astro.props;
        start makes the scroll offset of slide N simply its distance from slide
        0, which is what the script below relies on. */
     scroll-snap-align: start;
+
+    /* Makes each slide a containing block for absolutely positioned
+       descendants. Without it, the .visually-hidden spans inside the slides
+       resolved against an ancestor far up the tree, escaped the track's
+       overflow clipping entirely, and were counted against the DOCUMENT's
+       scroll width -- 1185px against a 375px viewport. Chromium tolerated it,
+       but the page was genuinely 3x too wide on real devices. */
+    position: relative;
   }
 
   .carousel__controls {

@@ -36,6 +36,18 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Belt and braces against sideways scroll. The carousel slides are the known
+   offender and are fixed at source, but nothing on this site should ever pan
+   horizontally, and a single off-screen element is an easy regression to
+   reintroduce.
+
+   `clip`, not `hidden`: hidden would turn the body into a scroll container,
+   which breaks position: sticky in descendants and makes scroll anchoring
+   behave oddly. clip just clips. */
+body {
+  overflow-x: clip;
+}
+
 /* ---- Links ----
    There was no global link colour, so any link not given one by its component
    fell back to the UA's #0000EE, and to purple once visited -- which is what
