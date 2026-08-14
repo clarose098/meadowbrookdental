@@ -38,27 +38,6 @@ const { title, description } = Astro.props;
       crossorigin
     />
 
-    {/* Runs before first paint so nothing flashes visible then hides.
-
-        Two safety properties matter here. The hidden state exists ONLY under
-        .js-motion, so with JavaScript off or broken every section is visible
-        by default -- the animation is additive, never a precondition for
-        reading the page. And the failsafe below is set here, in the inline
-        script that always runs, rather than in the module: if the module ever
-        fails to execute, the timer still reveals everything. Content that
-        depends on a bundle loading is content that can disappear. */}
-    <script is:inline>
-      if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-        document.documentElement.classList.add("js-motion");
-        window.__revealFailsafe = window.setTimeout(function () {
-          document
-            .querySelectorAll("main > section > .shell")
-            .forEach(function (el) {
-              el.classList.add("is-revealed");
-            });
-        }, 2000);
-      }
-    </script>
   </head>
 
   <body>
@@ -69,68 +48,5 @@ const { title, description } = Astro.props;
       <slot />
     </main>
     <SiteFooter />
-
-    <script>
-      const root = document.documentElement;
-
-      if (root.classList.contains("js-motion")) {
-        const targets = Array.from(
-          document.querySelectorAll<HTMLElement>("main > section > .shell"),
-        );
-
-        /* Deliberately a scroll handler rather than IntersectionObserver.
-
-           IO is the usual tool here and is normally the right one, but it
-           could not be verified in any browser available during this build:
-           a fresh observer with its target plainly in view fired zero
-           callbacks, and IO always fires an initial callback. An API that is
-           present but silently inert is the worst possible shape for this
-           feature, because the failure mode is invisible content rather than
-           a missing animation.
-
-           Over five elements a rect check on scroll costs nothing measurable,
-           runs everywhere, and — unlike IO — is directly observable, so it
-           can actually be tested. The listener detaches once everything has
-           been revealed. */
-        let pending = targets.slice();
-
-        function pass() {
-          pending = pending.filter((el) => {
-            /* 0.92 so a section starts moving just before its top edge, which
-               reads as anticipation rather than a jump. */
-            if (el.getBoundingClientRect().top < window.innerHeight * 0.92) {
-              el.classList.add("is-revealed");
-              return false;
-            }
-            return true;
-          });
-          if (pending.length === 0) {
-            window.removeEventListener("scroll", onScroll);
-            window.removeEventListener("resize", onScroll);
-          }
-        }
-
-        let ticking = false;
-        function onScroll() {
-          if (ticking) return;
-          ticking = true;
-          window.requestAnimationFrame(() => {
-            ticking = false;
-            pass();
-          });
-        }
-
-        /* Immediate first pass reveals whatever is already on screen, so the
-           hero never fades in and above-the-fold content is never withheld.
-           Clearing the failsafe here is safe in a way it was not with IO:
-           this just ran the same code path that every later reveal uses, so
-           it is evidence the mechanism works rather than an assumption. */
-        pass();
-        window.clearTimeout((window as any).__revealFailsafe);
-
-        window.addEventListener("scroll", onScroll, { passive: true });
-        window.addEventListener("resize", onScroll, { passive: true });
-      }
-    </script>
   </body>
 </html>

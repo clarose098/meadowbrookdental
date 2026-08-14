@@ -235,27 +235,47 @@ svg {
 /* ---- Scroll reveal ----
    Sections rise a little and fade in as they come into view.
 
-   Everything here is scoped to .js-motion, which the inline script in
-   BaseLayout adds ONLY when the visitor has not asked for reduced motion. So
-   there are two independent guards: the media query decides whether the class
-   is ever added, and the global reduced-motion block further down collapses
-   any transition that slips through.
+   Done with a CSS scroll-driven animation and no JavaScript at all, which
+   makes it fail-safe by construction rather than by careful handling:
 
-   Cheap by construction: opacity and transform are compositor-only, so this
-   never triggers layout or paint, and each element is unobserved after its
-   first reveal. 14px of travel is small enough to sit well inside what
-   vestibular guidance treats as safe -- this is a settle, not a slide. */
-.js-motion main > section > .shell {
-  opacity: 0;
-  transform: translateY(14px);
+   - @supports means a browser without `animation-timeline` never applies the
+     rule, so the content is simply always visible. There is no state in which
+     something is hidden waiting for code that might not run. Two JS versions
+     of this were tried first and both could leave sections stuck at opacity 0
+     if the mechanism silently no-opped, which on a medical practice's site is
+     a much worse outcome than no animation.
+   - prefers-reduced-motion: no-preference gates the whole thing, so anyone who
+     has asked for less motion gets a static page.
+   - Compositor-only properties, driven by the scroller, so it costs no layout
+     or paint and no main-thread work.
+   - 14px of travel is a settle, not a slide -- well inside what vestibular
+     guidance treats as safe.
+
+   Support today is Chromium-based browsers. Everywhere else the page renders
+   exactly as it did before, which is the correct degradation for decoration. */
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    main > section > .shell {
+      animation: section-reveal linear both;
+      animation-timeline: view();
+      /* Finishes well before the section is centred, so it has settled by the
+         time it is actually being read. A section already in view at load
+         starts past this range and so renders in its final state -- the hero
+         never fades in. */
+      animation-range: entry 0% entry 55%;
+    }
+  }
 }
 
-.js-motion main > section > .shell.is-revealed {
-  opacity: 1;
-  transform: none;
-  transition:
-    opacity 480ms var(--ease),
-    transform 480ms var(--ease);
+@keyframes section-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }
 
 /* Marks content that is standing in for something the practice still owes us.
