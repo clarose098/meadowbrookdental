@@ -40,7 +40,9 @@ import { services, site } from "../data/site";
   {
     services.map((service, i) => (
       <section
-        class:list={["svc", "section", { "svc--alt": i % 2 === 1 }]}
+        {/* First section takes the white ground so it separates from the
+            gradient intro above it, which ends on cream at its left edge. */}
+        class:list={["svc", "section", { "svc--alt": i % 2 === 0 }]}
         id={service.slug}
         aria-labelledby={`${service.slug}-title`}
       >
@@ -79,6 +81,13 @@ import { services, site } from "../data/site";
 </BaseLayout>
 
 <style>
+  /* The same gradient the homepage hero uses. Without it this intro sat on
+     plain cream directly above a cream section, and the two read as one block
+     with a heading floating in the middle of it. */
+  .intro {
+    background: var(--grad-hero);
+  }
+
   .intro__inner {
     display: flex;
     flex-direction: column;
@@ -130,9 +139,14 @@ import { services, site } from "../data/site";
     gap: 1.5rem;
   }
 
-  @media (min-width: 48rem) {
+  /* Same split and same breakpoint as the contact block below, so the second
+     column starts on the same line down the whole page. A 20rem left column
+     put the copy at x=450 where the contact card starts at x=745, and the
+     mismatch was visible as you scrolled. The wide left column is also the
+     right shape for the photo that goes there later. */
+  @media (min-width: 62rem) {
     .svc__inner {
-      grid-template-columns: minmax(12rem, 20rem) minmax(0, 1fr);
+      grid-template-columns: 1fr 1fr;
       column-gap: clamp(2rem, 5vw, 4.5rem);
       align-items: start;
     }

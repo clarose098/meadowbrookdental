@@ -140,7 +140,11 @@
 
   /* ---- Layout ---- */
   --gutter: clamp(1.25rem, 4vw, 3.75rem);  /* 20 -> 60px page padding */
-  --measure: 1320px;                       /* Figma content width at 1440 */
+  /* Figma drew content at 1320 inside a 1440 frame. Widened to 1440 so the
+     header has room on larger screens -- note this has no effect below a
+     ~1560px viewport, where the gutters are the binding constraint, so the
+     header's own gap tuning is what fixes crowding at common laptop sizes. */
+  --measure: 1440px;
   --radius-pill: 75px;
   --radius-card: 24px;
 

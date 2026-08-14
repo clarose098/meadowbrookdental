@@ -197,14 +197,18 @@ const currentPath = Astro.url.pathname;
     .menu-toggle {
       display: none;
     }
+    /* The gap before the button is deliberately larger than the gaps between
+       the links. They were both clamp(1.5rem, 3vw, 3.75rem), which left 43px
+       either side of the boundary and made the CTA read as a fifth nav item
+       crowding the fourth. Links now group tighter, the button stands apart. */
     .nav {
       display: flex;
       align-items: center;
-      gap: clamp(1.5rem, 3vw, 3.75rem);
+      gap: clamp(2rem, 4.5vw, 5rem);
     }
     .nav__list {
       display: flex;
-      gap: clamp(1.5rem, 3vw, 3.75rem);
+      gap: clamp(1.25rem, 2.4vw, 2.75rem);
     }
   }
 </style>
