@@ -29,6 +29,13 @@
   box-sizing: border-box;
 }
 
+/* Eases in-page anchor jumps -- the services sub-nav in particular, which
+   teleported. The global reduced-motion block below forces this back to `auto`,
+   so anyone who has asked for less motion still gets an instant jump. */
+html {
+  scroll-behavior: smooth;
+}
+
 /* ---- Links ----
    There was no global link colour, so any link not given one by its component
    fell back to the UA's #0000EE, and to purple once visited -- which is what
@@ -253,38 +260,25 @@ svg {
 
    Support today is Chromium-based browsers. Everywhere else the page renders
    exactly as it did before, which is the correct degradation for decoration. */
-@media (prefers-reduced-motion: no-preference) {
-  @supports (animation-timeline: view()) {
-    /* Longhands, never the `animation` shorthand.
+/* Driven by a small scroll handler in BaseLayout rather than a CSS scroll
+   timeline. The CSS version was tried first and is the nicer mechanism -- no
+   JavaScript, fail-safe by construction -- but `animation-timeline` is
+   Chromium-only today, so Safari and Firefox visitors saw no motion at all.
 
-       The shorthand does not accept a timeline value, but the CSS minifier
-       will happily fold `animation` and `animation-timeline` together into
-       `animation: linear both section-reveal view()` — which is invalid, so
-       the browser drops the whole declaration and no animation runs at all.
-       Writing longhands keeps the minifier from producing that merge. */
-    main > section > .shell {
-      animation-name: section-reveal;
-      animation-fill-mode: both;
-      animation-timing-function: linear;
-      animation-timeline: view();
-      /* Finishes well before the section is centred, so it has settled by the
-         time it is actually being read. A section already in view at load
-         starts past this range and so renders in its final state -- the hero
-         never fades in. */
-      animation-range: entry 0% entry 55%;
-    }
-  }
+   The hidden state applies only under .js-motion, which the inline script adds
+   only when JavaScript runs AND the visitor has not asked for reduced motion.
+   With JS off, broken, or reduced motion set, every section is visible. */
+.js-motion main > section > .shell {
+  opacity: 0;
+  transform: translateY(14px);
 }
 
-@keyframes section-reveal {
-  from {
-    opacity: 0;
-    transform: translateY(14px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
+.js-motion main > section > .shell.is-revealed {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity 480ms var(--ease),
+    transform 480ms var(--ease);
 }
 
 /* Marks content that is standing in for something the practice still owes us.

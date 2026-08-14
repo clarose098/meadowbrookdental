@@ -38,6 +38,24 @@ const { title, description } = Astro.props;
       crossorigin
     />
 
+    {/* Runs before first paint so nothing flashes visible and then hides.
+
+        The failsafe is set here, in the inline script that always runs, rather
+        than in the module below: if that module ever fails to execute, this
+        timer still reveals everything. Content that depends on a bundle
+        loading is content that can disappear. */}
+    <script is:inline>
+      if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        document.documentElement.classList.add("js-motion");
+        window.__revealFailsafe = window.setTimeout(function () {
+          document
+            .querySelectorAll("main > section > .shell")
+            .forEach(function (el) {
+              el.classList.add("is-revealed");
+            });
+        }, 2500);
+      }
+    </script>
   </head>
 
   <body>
@@ -48,5 +66,50 @@ const { title, description } = Astro.props;
       <slot />
     </main>
     <SiteFooter />
+
+    <script>
+      if (document.documentElement.classList.contains("js-motion")) {
+        const targets = Array.from(
+          document.querySelectorAll<HTMLElement>("main > section > .shell"),
+        );
+        let pending = targets.slice();
+
+        function pass() {
+          pending = pending.filter((el) => {
+            /* 0.92 so a section starts moving just before its top edge clears
+               the fold, which reads as anticipation rather than a jump. */
+            if (el.getBoundingClientRect().top < window.innerHeight * 0.92) {
+              el.classList.add("is-revealed");
+              return false;
+            }
+            return true;
+          });
+          if (pending.length === 0) {
+            window.removeEventListener("scroll", onScroll);
+            window.removeEventListener("resize", onScroll);
+          }
+        }
+
+        let ticking = false;
+        function onScroll() {
+          if (ticking) return;
+          ticking = true;
+          window.requestAnimationFrame(() => {
+            ticking = false;
+            pass();
+          });
+        }
+
+        /* Immediate pass reveals whatever is already on screen, so the hero
+           never fades in. Clearing the failsafe straight after is honest: this
+           just ran the same function every later reveal uses, so it is
+           evidence the mechanism works rather than a guess about an API. */
+        pass();
+        window.clearTimeout((window as any).__revealFailsafe);
+
+        window.addEventListener("scroll", onScroll, { passive: true });
+        window.addEventListener("resize", onScroll, { passive: true });
+      }
+    </script>
   </body>
 </html>
