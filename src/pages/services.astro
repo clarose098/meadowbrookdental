@@ -1,12 +1,160 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
-import Services from "../components/Services.astro";
+import Icon from "../components/Icon.astro";
+import ContactSection from "../components/ContactSection.astro";
+import { services, site } from "../data/site";
 ---
 
-{/* Stub -- see about.astro. */}
 <BaseLayout
   title="Services"
   description="Family, cosmetic, preventive and restorative dentistry at Meadowbrook Dental in Auburn Hills, Michigan."
 >
-  <Services headingLevel={1} />
+  <section class="intro section" aria-labelledby="services-title">
+    <div class="shell intro__inner">
+      <p class="eyebrow">Our services</p>
+      <h1 id="services-title">Comprehensive care for every smile</h1>
+      <p class="intro__lede">
+        Whatever your smile needs, we make every visit comfortable, gentle and
+        welcoming. Everything below happens under one roof in {site.locality}.
+      </p>
+
+      {/* Plain anchors to the section headings -- no JS, and deliberately not
+          sticky. A sticky bar would eat viewport height on a phone and can
+          cover the very heading it just jumped to, and keeping it honest as you
+          scroll would need scroll-spy and aria-current. For four links that is
+          not worth it. */}
+      <nav class="jump" aria-label="Services on this page">
+        <ul class="jump__list">
+          {
+            services.map((service) => (
+              <li>
+                <a href={`#${service.slug}`}>{service.title}</a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+    </div>
+  </section>
+
+  {
+    services.map((service, i) => (
+      <section
+        class:list={["svc", "section", { "svc--alt": i % 2 === 1 }]}
+        id={service.slug}
+        aria-labelledby={`${service.slug}-title`}
+      >
+        <div class="shell svc__inner">
+          <Icon name={`service-${i + 1}`} width={72} class="svc__icon" />
+          <h2 id={`${service.slug}-title`}>{service.title}</h2>
+
+          {service.detail.paragraphs.map((para) => (
+            <p>{para}</p>
+          ))}
+
+          {service.detail.list && (
+            <>
+              <p class="svc__list-intro">{service.detail.listIntro}</p>
+              <ul class="svc__list">
+                {service.detail.list.map((item) => (
+                  <li>{item}</li>
+                ))}
+              </ul>
+            </>
+          )}
+        </div>
+      </section>
+    ))
+  }
+
+  <ContactSection />
 </BaseLayout>
+
+<style>
+  .intro__inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.875rem;
+    text-align: center;
+    max-width: 48rem;
+  }
+
+  .intro__lede {
+    text-wrap: pretty;
+  }
+
+  .jump {
+    margin-top: 1.25rem;
+  }
+
+  .jump__list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.625rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Pills rather than a plain link row: they read as a set of destinations
+     rather than running prose, and each one clears the 24x24 target minimum in
+     2.5.8 comfortably. */
+  .jump__list a {
+    display: inline-block;
+    padding: 0.55rem 1.1rem;
+    border: 1px solid var(--teal);
+    border-radius: var(--radius-pill);
+    color: var(--teal);
+    font-size: var(--step-small);
+    text-decoration: none;
+    transition: background-color var(--dur) var(--ease);
+  }
+
+  .jump__list a:hover,
+  .jump__list a:focus-visible {
+    background: var(--chip);
+  }
+
+  .svc__inner {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.25rem;
+    max-width: 68ch;
+  }
+
+  .svc__inner p {
+    margin: 0;
+    text-wrap: pretty;
+  }
+
+  .svc__icon {
+    flex: none;
+  }
+
+  /* Alternating ground so the four sections read as separate bands without
+     needing rules between them. */
+  .svc--alt {
+    background: var(--white);
+  }
+
+  .svc__list-intro {
+    font-weight: 700;
+  }
+
+  .svc__list {
+    margin: 0;
+    padding-left: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  /* Nothing on this site is sticky today, but an anchored heading landing hard
+     against the top of the window reads badly either way. */
+  .svc {
+    scroll-margin-top: 1.5rem;
+  }
+</style>

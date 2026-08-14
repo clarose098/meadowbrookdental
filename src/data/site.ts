@@ -97,26 +97,84 @@ export const hours = [
   { day: "Sunday", short: "Sun.", time: "Closed" },
 ];
 
+/* `description` is the homepage card; `detail` is the section on /services/.
+   Both live here so the four offerings cannot drift apart between the two
+   pages, and `slug` is the anchor the services sub-nav jumps to.
+
+   Detail copy is condensed from the practice's previous site. Two deliberate
+   departures from that source, both flagged in the commit:
+
+   - The old Cosmetic page ran to roughly 1,200 words of claims that cosmetic
+     dentistry improves mood, marriages, career focus, weight loss and life
+     expectancy, each citing a popular-science article. Those are health
+     outcome claims a dental practice would have to substantiate, and they are
+     not what someone choosing a dentist is reading for. Cut to what the
+     practice actually does.
+   - The old Preventive page carried specific decay statistics with no source.
+     Repeating unsourced figures as fact is not worth the risk; the actionable
+     advice they introduced is kept. */
 export const services = [
   {
+    slug: "family-dentistry",
     title: "Family Dentistry",
     description:
       "Exams, cleanings, and everyday care for every age, from your child's first visit to your own.",
+    detail: {
+      paragraphs: [
+        "Dr. Soni is trained to treat patients of every age, so your whole family can be seen in one place instead of running between offices. Her patients are treated as an extension of her own family.",
+        "She likes to work with parents, children and grandparents together — setting good habits early, and giving everyone someone to set an example for.",
+        "At a routine visit she checks every tooth and the tissue around it: gums, tongue and cheeks. She assesses plaque levels, looks for decay and damage, and screens for oral cancer and jaw (TMJ) problems. A first visit may include a full set of X-rays to find cavities, bone loss or anything not visible from the surface.",
+        "Whatever she finds, the plan is explained in full before any work starts. Most visits also include a professional cleaning.",
+      ],
+    },
   },
   {
+    slug: "cosmetic-dentistry",
     title: "Cosmetic Dentistry",
     description:
       "Invisalign, whitening, veneers, and smile-design consultations to give you confidence.",
+    detail: {
+      paragraphs: [
+        "A smile you are happy to show makes a difference to how you carry yourself. Dr. Soni uses a range of techniques to get you there, whether you have lived with a missing tooth for years or chipped one last week.",
+        "Cosmetic work is not only about appearance. An askew tooth or an uneven bite can put extra strain on your teeth and jaw muscles, so evening things out often makes the mouth more comfortable to use as well.",
+        "Ask about the results she has achieved for other patients — she is glad to talk them through.",
+      ],
+    },
   },
   {
+    slug: "preventive-dentistry",
     title: "Preventive Dentistry",
     description:
       "Regular checkups and hygiene that stop problems before they start.",
+    detail: {
+      paragraphs: [
+        "Preventive care protects your teeth before problems start, and most decay is preventable.",
+        "Regular visits are the part people skip. After nearly three decades, Dr. Soni recognises the warning signs long before they become painful or expensive — often things a patient has not noticed at all.",
+        "She will give you the facts and your options, then leave the decision with you.",
+      ],
+      listIntro: "Small habits that make the biggest difference:",
+      list: [
+        "Cut back on sugary drinks — pop, energy drinks, sports drinks and processed juices",
+        "Brush and floss at least twice a day",
+        "Eat more fresh fruit, vegetables and whole grains",
+        "Avoid sharing cups, utensils or food, which passes bacteria between people",
+        "Ask about any medication or condition that leaves your mouth dry",
+        "Xylitol gum and baking-soda rinses help reduce acidity and bad bacteria",
+      ],
+    },
   },
   {
+    slug: "restorative-dentistry",
     title: "Restorative Dentistry",
     description:
       "Implants, crowns, and root canals that restore comfort and function.",
+    detail: {
+      paragraphs: [
+        "Restorative treatment brings the mouth back to full function. Even with good preventive care it is sometimes needed — accidents and genetics play their part.",
+        "Dr. Soni starts with the whole picture rather than the tooth in front of her. A patient's history, experiences and circumstances all contribute to where their teeth are today, and she takes that into account before treating anything.",
+        "From there she explains the risk factors and the benefits of each option, so the decision you make is an informed one. Treatments include bone augmentation, gingival recontouring and occlusal therapy.",
+      ],
+    },
   },
 ];
 
