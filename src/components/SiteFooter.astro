@@ -40,7 +40,7 @@ const year = new Date().getFullYear();
                   {item.icon ? (
                     <Icon name={item.icon} width={20} />
                   ) : (
-                    <span aria-hidden="true">{item.initial}</span>
+                    <span class="social__initial" aria-hidden="true">{item.initial}</span>
                   )}
                   <span class="visually-hidden">
                     {site.name} on {item.name}
@@ -54,7 +54,7 @@ const year = new Date().getFullYear();
                   {item.icon ? (
                     <Icon name={item.icon} width={20} />
                   ) : (
-                    <span aria-hidden="true">{item.initial}</span>
+                    <span class="social__initial" aria-hidden="true">{item.initial}</span>
                   )}
                   <span class="visually-hidden">
                     {item.name} — account not set up yet
@@ -174,6 +174,16 @@ const year = new Date().getFullYear();
     background: rgb(255 255 255 / 0.14);
   }
 
+  /* The lettered fallback has to hold its own beside the 20px SVGs. At the
+     .social font-size it set at 16.8px, and a lowercase f fills far less of
+     that box than an icon does, so Facebook looked undersized next to Yelp and
+     Google. Sized by cap height rather than font-size to match them optically.
+     Delete this once the Facebook SVG lands and every mark is an icon. */
+  .social__initial {
+    font-size: 1.5rem;
+    line-height: 1;
+  }
+
   /* Not a link yet, so it should not look clickable. */
   .social--pending {
     opacity: 0.75;
@@ -219,11 +229,19 @@ const year = new Date().getFullYear();
     outline-color: var(--white);
   }
 
+  /* Sits outside .shell, so it had no horizontal padding and ran flush to the
+     viewport edge on a phone. Given the shell's own measure and padding here
+     so the rule above it lines up with the columns rather than spanning the
+     full width. */
   .footer__legal {
+    max-width: calc(var(--measure) + var(--gutter) * 2);
+    margin-inline: auto;
     margin-top: clamp(2rem, 5vw, 3.5rem);
+    padding-inline: var(--gutter);
     padding-top: 1.5rem;
     border-top: 1px solid rgb(255 255 255 / 0.4);
     text-align: center;
+    text-wrap: pretty;
   }
 
   @media (min-width: 48rem) {

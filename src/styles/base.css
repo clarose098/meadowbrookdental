@@ -232,6 +232,32 @@ svg {
   padding-block: clamp(2.25rem, 5vw, 4.5rem);
 }
 
+/* ---- Scroll reveal ----
+   Sections rise a little and fade in as they come into view.
+
+   Everything here is scoped to .js-motion, which the inline script in
+   BaseLayout adds ONLY when the visitor has not asked for reduced motion. So
+   there are two independent guards: the media query decides whether the class
+   is ever added, and the global reduced-motion block further down collapses
+   any transition that slips through.
+
+   Cheap by construction: opacity and transform are compositor-only, so this
+   never triggers layout or paint, and each element is unobserved after its
+   first reveal. 14px of travel is small enough to sit well inside what
+   vestibular guidance treats as safe -- this is a settle, not a slide. */
+.js-motion main > section > .shell {
+  opacity: 0;
+  transform: translateY(14px);
+}
+
+.js-motion main > section > .shell.is-revealed {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity 480ms var(--ease),
+    transform 480ms var(--ease);
+}
+
 /* Marks content that is standing in for something the practice still owes us.
    Deliberately loud -- its job is to be impossible to miss in a review, so
    placeholder copy cannot quietly reach production. Remove the `placeholder`

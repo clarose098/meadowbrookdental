@@ -37,6 +37,28 @@ const { title, description } = Astro.props;
       type="font/woff2"
       crossorigin
     />
+
+    {/* Runs before first paint so nothing flashes visible then hides.
+
+        Two safety properties matter here. The hidden state exists ONLY under
+        .js-motion, so with JavaScript off or broken every section is visible
+        by default -- the animation is additive, never a precondition for
+        reading the page. And the failsafe below is set here, in the inline
+        script that always runs, rather than in the module: if the module ever
+        fails to execute, the timer still reveals everything. Content that
+        depends on a bundle loading is content that can disappear. */}
+    <script is:inline>
+      if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        document.documentElement.classList.add("js-motion");
+        window.__revealFailsafe = window.setTimeout(function () {
+          document
+            .querySelectorAll("main > section > .shell")
+            .forEach(function (el) {
+              el.classList.add("is-revealed");
+            });
+        }, 2000);
+      }
+    </script>
   </head>
 
   <body>
@@ -47,5 +69,44 @@ const { title, description } = Astro.props;
       <slot />
     </main>
     <SiteFooter />
+
+    <script>
+      const root = document.documentElement;
+
+      if (root.classList.contains("js-motion")) {
+        /* The module reached the page, so the inline failsafe is not needed. */
+        window.clearTimeout((window as any).__revealFailsafe);
+
+        const targets = Array.from(
+          document.querySelectorAll<HTMLElement>("main > section > .shell"),
+        );
+        const reveal = (el: HTMLElement) => el.classList.add("is-revealed");
+
+        /* The first section is above the fold. Fading it in would delay the
+           page looking loaded, which is the opposite of feeling polished. */
+        targets.slice(0, 1).forEach(reveal);
+        const rest = targets.slice(1);
+
+        if ("IntersectionObserver" in window) {
+          const io = new IntersectionObserver(
+            (entries, obs) => {
+              entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                  reveal(entry.target as HTMLElement);
+                  /* Once revealed, stop watching -- this never re-hides on the
+                     way back up, which would be motion the reader did not ask
+                     for a second time. */
+                  obs.unobserve(entry.target);
+                }
+              });
+            },
+            { rootMargin: "0px 0px -8% 0px", threshold: 0.04 },
+          );
+          rest.forEach((el) => io.observe(el));
+        } else {
+          rest.forEach(reveal);
+        }
+      }
+    </script>
   </body>
 </html>
