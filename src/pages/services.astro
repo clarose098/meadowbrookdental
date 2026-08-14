@@ -147,7 +147,11 @@ import { services, site } from "../data/site";
   @media (min-width: 62rem) {
     .svc__inner {
       grid-template-columns: 1fr 1fr;
-      column-gap: clamp(2rem, 5vw, 4.5rem);
+      /* Identical to the contact block's gap, not merely similar. With 1fr 1fr
+         the gap decides where the second column starts, so a different clamp
+         left the two 4px apart — close enough to look like a mistake rather
+         than a choice. */
+      column-gap: clamp(2.5rem, 6vw, 4rem);
       align-items: start;
     }
   }
