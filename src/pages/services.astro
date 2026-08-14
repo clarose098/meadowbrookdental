@@ -140,16 +140,29 @@ import { services, site } from "../data/site";
     background: var(--chip);
   }
 
+  /* The column pair caps at 1140px of content and scales down below that.
+     Written as content + gutters because .shell is border-box: a flat 1140px
+     here would leave only 1020px of columns once the page padding came out.
+
+     Note this makes the second column start further left than the contact
+     block's form card, which spans the full measure -- see the section
+     comment below. */
   .svc__inner {
     display: grid;
     gap: 1.5rem;
+    max-width: calc(1140px + var(--gutter) * 2);
+    margin-inline: auto;
   }
 
-  /* Same split and same breakpoint as the contact block below, so the second
-     column starts on the same line down the whole page. A 20rem left column
-     put the copy at x=450 where the contact card starts at x=745, and the
-     mismatch was visible as you scrolled. The wide left column is also the
-     right shape for the photo that goes there later. */
+  /* Same 50/50 split and same breakpoint as the contact block, but the 1140px
+     cap above means the two no longer share a second-column edge -- the
+     contact block still runs the full measure.
+
+     That is a deliberate trade, not a regression: the sections were asked to
+     come in tighter, and nothing applied to this grid can narrow it while also
+     holding an edge shared with a wider block. Capping the contact block to
+     1140 as well would restore the alignment, at the cost of narrowing the
+     form on the homepage and the contact page too. */
   @media (min-width: 62rem) {
     .svc__inner {
       grid-template-columns: 1fr 1fr;
