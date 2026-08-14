@@ -65,9 +65,12 @@ export const doctorBio = [
   "Dr. Soni is certified in Invisalign, and while she thoroughly enjoys every aspect of general dentistry, she especially loves doing root canals that bring her patients comfort. Her favorite part of dentistry is seeing patients free of dental problems — she takes pride in knowing they leave the clinic with the best experience possible and the best treatment for their oral health.",
   "She enjoys lifelong learning and routinely takes classes on the latest dental technology and techniques. Dr. Soni is a member of the American Dental Association and the Michigan Dental Association, and an active member of the Macomb Dental Society.",
   "Dr. Soni grew up with four siblings in India, and shares a special bond with her twin sister — also a dentist, practicing in India. She is proud of the upbringing and the values her parents gave her.",
-  /* "young son" dropped from the archived wording — the source page is of
-     unknown vintage and he has grown up since. */
-  "Dr. Soni and her husband Nilesh live in Troy with their son, Pratham. In her free time she likes to watch sports with the family and cook for her boys, friends and family.",
+  /* Reworked from the archived wording. "young son" went because the source
+     page is of unknown vintage and he has grown up since; "her boys" went
+     because it reads as either Nilesh and Pratham or an unnamed second son.
+     "with them" carries the same meaning without the ambiguity, and drops the
+     original's doubled "family ... friends and family". */
+  "Dr. Soni and her husband Nilesh live in Troy with their son, Pratham. In her free time she likes to watch sports with them and cook for friends and family.",
 ];
 
 /* The practice's own line, carried over from the previous site. */
