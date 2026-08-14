@@ -20,7 +20,9 @@ import {
         <p class="eyebrow">New patients</p>
         <h1 id="new-patients-title">You&rsquo;ll feel like family here</h1>
         <p class="intro__lede">
-          Whether it has been six months or fifteen years, you are welcome at
+          {/* Explicit {" "} — Astro strips the space at a line end, which runs
+              "at" into the practice name. */}
+          Whether it has been six months or fifteen years, you are welcome at{" "}
           {site.name}. Here is exactly what happens, so nothing about your
           first visit is a surprise.
         </p>
