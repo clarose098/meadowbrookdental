@@ -84,6 +84,20 @@ const { title, description } = Astro.props;
             }
             return true;
           });
+
+          /* If the document cannot scroll, no scroll event will ever fire, so
+             anything still pending would stay hidden for good. Reachable on a
+             short page viewed on a tall window: content fits the viewport, but
+             a section still starts below the 0.92 line. Checked on every pass
+             so a resize into that state is caught too. */
+          if (
+            pending.length > 0 &&
+            document.documentElement.scrollHeight <= window.innerHeight + 1
+          ) {
+            pending.forEach((el) => el.classList.add("is-revealed"));
+            pending = [];
+          }
+
           if (pending.length === 0) {
             window.removeEventListener("scroll", onScroll);
             window.removeEventListener("resize", onScroll);
