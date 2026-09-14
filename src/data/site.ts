@@ -411,6 +411,19 @@ export const testimonials = [
   },
 ];
 
+/* Four slides: the practice itself, then the three current offers.
+
+   The three offer slides are images of text, which WCAG 1.4.5 discourages --
+   text in an image cannot reflow or be restyled, and goes soft when zoomed.
+   They are accepted here because they are designed marketing assets and,
+   crucially, every figure on them exists as real, selectable text on
+   /specials/, which each slide links to. The caption under each slide also
+   carries the headline figure as real text, so the offer is never trapped in
+   a bitmap.
+
+   `alt` reflects the words on each image, condensed where repeating every line
+   verbatim would make a poor link name. `href` points at the matching anchor
+   on the specials page. */
 export const heroPhotos = [
   {
     /* -v2, not a replacement of office-exterior.jpg: /images/* is cached for a
@@ -421,21 +434,21 @@ export const heroPhotos = [
     caption: "3421 Five Points Drive in Auburn Hills, MI",
   },
   {
-    src: "/images/placeholder-photo-2.svg",
-    alt: "Placeholder — a photo of the practice will replace this.",
-    caption: "Reception or waiting area",
-    placeholder: true,
+    src: "/images/special-invisalign.jpg",
+    alt: "Get your Invisalign today and get up to $1,000 off.",
+    caption: "Learn more about our Invisalign offer — up to $1,000 off",
+    href: "/specials/#invisalign",
   },
   {
-    src: "/images/placeholder-photo-3.svg",
-    alt: "Placeholder — a photo of the practice will replace this.",
-    caption: "A treatment room",
-    placeholder: true,
+    src: "/images/special-zoom-whitening.jpg",
+    alt: "Brighter, whiter teeth at an affordable price. Save $400.",
+    caption: "Learn more about Zoom whitening — save $400",
+    href: "/specials/#zoom-whitening",
   },
   {
-    src: "/images/placeholder-photo-4.svg",
-    alt: "Placeholder — a photo of the practice will replace this.",
-    caption: "The team",
-    placeholder: true,
+    src: "/images/special-in-office-plans.jpg",
+    alt: "In-Office Plans. No insurance? No problem. Kids preventive plan $225 a year, adult preventive plan $275 a year, adult periodontal plan $450 a year.",
+    caption: "Learn more about our In-Office Plans — from $225 a year",
+    href: "/specials/#in-office-plans",
   },
 ];

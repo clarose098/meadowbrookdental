@@ -34,22 +34,48 @@ import { site, heroPhotos } from "../data/site";
         count={heroPhotos.length}
       >
         {
-          heroPhotos.map((photo, i) => (
-            <figure
-              class="hero__slide"
-              role="group"
-              aria-roledescription="slide"
-              aria-label={`${i + 1} of ${heroPhotos.length}`}
-            >
-              <img src={photo.src} alt={photo.alt} width="629" height="362" />
-              <figcaption>
-                {photo.placeholder && (
-                  <span class="placeholder-badge">Placeholder</span>
+          heroPhotos.map((photo, i) => {
+            const href = "href" in photo ? photo.href : undefined;
+
+            /* Only the first slide is on screen at load. The other three are
+               offer graphics around 200KB each, so eager-loading them would
+               cost roughly 600KB nobody has asked to see yet. */
+            const inner = (
+              <>
+                <img
+                  src={photo.src}
+                  alt={photo.alt}
+                  width="629"
+                  height="362"
+                  loading={i === 0 ? "eager" : "lazy"}
+                  decoding={i === 0 ? "sync" : "async"}
+                />
+                <figcaption>{photo.caption}</figcaption>
+              </>
+            );
+
+            return (
+              <figure
+                class="hero__slide"
+                role="group"
+                aria-roledescription="slide"
+                aria-label={`${i + 1} of ${heroPhotos.length}`}
+              >
+                {/* One link around the image and its caption together, rather
+                    than two adjacent links to the same place. The accessible
+                    name becomes the image's text followed by the caption --
+                    slightly verbose, but wholly descriptive, and it means the
+                    offer is not trapped in a bitmap for anyone. */}
+                {href ? (
+                  <a class="hero__slide-link" href={href}>
+                    {inner}
+                  </a>
+                ) : (
+                  inner
                 )}
-                <span>{photo.caption}</span>
-              </figcaption>
-            </figure>
-          ))
+              </figure>
+            );
+          })
         }
       </Carousel>
     </div>
@@ -122,6 +148,25 @@ import { site, heroPhotos } from "../data/site";
     height: auto;
     border-radius: 12px;
     object-fit: cover;
+  }
+
+  /* The link is the slide's layout box, so it repeats the figure's column
+     stacking rather than sitting inside it as an inline run. */
+  .hero__slide-link {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    text-decoration: none;
+    color: inherit;
+    border-radius: 12px;
+  }
+
+  /* The caption is the only part that reads as a link, so it carries the
+     underline on hover. The image lifting or tinting would fight the offer
+     artwork it sits on. */
+  .hero__slide-link:hover figcaption,
+  .hero__slide-link:focus-visible figcaption {
+    text-decoration: underline;
   }
 
   .hero__slide figcaption {
