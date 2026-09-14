@@ -1,0 +1,348 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import ContactSection from "../components/ContactSection.astro";
+import { site, specials } from "../data/site";
+
+/* JSON-LD so answer engines and search can read the offers as data rather than
+   inferring them from prose. Only facts that are actually settled go in here:
+   the plan prices are exact figures the practice gave, while the Invisalign and
+   Zoom discounts are not encoded, because "up to $1,000 off" has no confirmed
+   terms yet and a machine-readable claim is a worse place than body copy for
+   something unsubstantiated. */
+const planOffers = specials
+  .flatMap((s) => s.plans ?? [])
+  .map((plan) => ({
+    "@type": "Offer",
+    name: plan.name,
+    price: String(plan.price),
+    priceCurrency: "USD",
+    description: plan.includes.join("; "),
+  }));
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Dentist",
+  name: site.name,
+  telephone: site.phone,
+  email: site.email,
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: site.street,
+    addressLocality: site.locality,
+    addressRegion: site.region,
+    postalCode: site.postalCode,
+    addressCountry: "US",
+  },
+  makesOffer: planOffers,
+};
+---
+
+<BaseLayout
+  title="Specials"
+  description="Current offers at Meadowbrook Dental in Auburn Hills: Invisalign, Zoom whitening, and in-office plans for patients without insurance."
+>
+  <script
+    type="application/ld+json"
+    set:html={JSON.stringify(jsonLd)}
+    is:inline
+  />
+
+  <section class="intro section" aria-labelledby="specials-title">
+    <div class="shell intro__inner">
+      <p class="eyebrow">Current offers</p>
+      <h1 id="specials-title">Specials at Meadowbrook Dental</h1>
+      <p class="intro__lede">
+        Treatment worth having should not be out of reach. These are the offers
+        running at the practice right now &mdash; ask about any of them when
+        you call.
+      </p>
+
+      {/* Plain anchors, same pattern as the services page. Deliberately not a
+          nav dropdown: hover-triggered menus are one of the commonest
+          accessibility failures, and three links do not justify the keyboard,
+          focus and aria-expanded machinery a correct one needs. */}
+      <nav class="jump" aria-label="Specials on this page">
+        <ul class="jump__list">
+          {
+            specials.map((special) => (
+              <li>
+                <a href={`#${special.slug}`}>{special.title}</a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+    </div>
+  </section>
+
+  {
+    specials.map((special, i) => (
+      <section
+        class:list={["special", "section", { "special--alt": i % 2 === 0 }]}
+        id={special.slug}
+        aria-labelledby={`${special.slug}-title`}
+      >
+        <div class="shell special__inner">
+          <div class="special__head">
+            <h2 id={`${special.slug}-title`}>{special.title}</h2>
+            <p class="special__headline">{special.headline}</p>
+            {special.needsTerms && (
+              <p class="special__terms">
+                <span class="placeholder-badge">Terms needed</span>
+                <span>Validity period and conditions to be confirmed</span>
+              </p>
+            )}
+          </div>
+
+          <div class="special__copy">
+            <p class="special__lede">{special.lede}</p>
+
+            {special.body.map((para) => (
+              <p>{para}</p>
+            ))}
+
+            {special.priceLines && (
+              <ul class="special__prices">
+                {special.priceLines.map((line) => (
+                  <li>{line}</li>
+                ))}
+              </ul>
+            )}
+
+            {special.plans && (
+              <div class="plans">
+                {special.plans.map((plan) => (
+                  <article class="plan">
+                    <h3 class="plan__name">
+                      {plan.name}
+                      {plan.qualifier && (
+                        <span class="plan__qualifier"> ({plan.qualifier})</span>
+                      )}
+                    </h3>
+                    <p class="plan__price">
+                      <strong>${plan.price}</strong> a year
+                    </p>
+                    <p class="plan__saving">{plan.saving}</p>
+                    <ul class="plan__includes">
+                      {plan.includes.map((item) => (
+                        <li>{item}</li>
+                      ))}
+                    </ul>
+                  </article>
+                ))}
+              </div>
+            )}
+
+            {special.disclaimer && (
+              <p class="special__disclaimer">{special.disclaimer}</p>
+            )}
+
+            {special.link && (
+              <p>
+                <a href={special.link.href} rel="noopener">
+                  {special.link.label}
+                </a>
+              </p>
+            )}
+
+            <p class="special__cta">
+              <a class="btn btn--solid" href={site.phoneHref}>
+                Call {site.phone}
+              </a>
+            </p>
+          </div>
+        </div>
+      </section>
+    ))
+  }
+
+  <ContactSection />
+</BaseLayout>
+
+<style>
+  .intro {
+    background: var(--grad-hero);
+  }
+
+  .intro__inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.875rem;
+    text-align: center;
+    max-width: 62rem;
+    margin-inline: auto;
+  }
+
+  .intro__lede {
+    max-width: 46rem;
+    text-wrap: pretty;
+  }
+
+  .jump {
+    margin-top: 1.25rem;
+  }
+
+  .jump__list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.625rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .jump__list a {
+    display: inline-block;
+    padding: 0.55rem 1.1rem;
+    border: 1px solid var(--teal);
+    border-radius: var(--radius-pill);
+    color: var(--teal);
+    font-size: var(--step-small);
+    text-decoration: none;
+    transition: background-color var(--dur) var(--ease);
+  }
+
+  .jump__list a:hover,
+  .jump__list a:focus-visible {
+    background: var(--chip);
+  }
+
+  /* Same 1fr 1fr and the same gap as the services, new patients and contact
+     grids, so every two-column block on the site shares a second-column edge. */
+  .special__inner {
+    display: grid;
+    gap: 1.5rem;
+    max-width: calc(1140px + var(--gutter) * 2);
+    margin-inline: auto;
+  }
+
+  @media (min-width: 62rem) {
+    .special__inner {
+      grid-template-columns: 1fr 1fr;
+      column-gap: clamp(2.5rem, 6vw, 4rem);
+      align-items: start;
+    }
+  }
+
+  .special--alt {
+    background: var(--white);
+  }
+
+  .special__head {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .special__headline {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: var(--step-h3);
+    font-weight: 700;
+    color: var(--teal);
+  }
+
+  .special__terms {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.6rem;
+    margin: 0.5rem 0 0;
+    font-size: var(--step-small);
+  }
+
+  .special__copy {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    max-width: 58ch;
+  }
+
+  .special__copy p {
+    margin: 0;
+    text-wrap: pretty;
+  }
+
+  .special__lede {
+    font-weight: 700;
+  }
+
+  .special__prices {
+    margin: 0;
+    padding-left: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .plans {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .plan {
+    background: var(--cream);
+    border-radius: var(--radius-card);
+    padding: clamp(1.25rem, 3vw, 1.75rem);
+  }
+
+  .special--alt .plan {
+    background: var(--chip);
+  }
+
+  .plan__name {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: var(--step-body);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .plan__qualifier {
+    text-transform: none;
+    letter-spacing: 0;
+    font-weight: 400;
+  }
+
+  .plan__price {
+    margin: 0.4rem 0 0;
+    font-size: var(--step-h3);
+    font-family: var(--font-display);
+  }
+
+  .plan__saving {
+    margin: 0.1rem 0 0.9rem;
+    color: var(--teal);
+    font-weight: 700;
+    font-size: var(--step-small);
+  }
+
+  .plan__includes {
+    margin: 0;
+    padding-left: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  /* Full ink and a rule, not small print. It carries the statement that these
+     plans are not insurance, which is the one line on the page a reader most
+     needs to actually register. */
+  .special__disclaimer {
+    padding-inline-start: 1rem;
+    border-inline-start: 3px solid var(--teal);
+    font-size: var(--step-small);
+  }
+
+  .special__cta {
+    margin-top: 0.25rem;
+  }
+
+  .special__cta .btn {
+    text-decoration: none;
+  }
+</style>

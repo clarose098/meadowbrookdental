@@ -79,6 +79,7 @@ export const motto = "Dentistry is our profession, but people are our focus.";
 export const nav = [
   { label: "About", href: "/about/" },
   { label: "Services", href: "/services/" },
+  { label: "Specials", href: "/specials/" },
   { label: "New Patients", href: "/new-patients/" },
   { label: "Contact", href: "/contact/" },
 ];
@@ -97,22 +98,6 @@ export const hours = [
   { day: "Sunday", short: "Sun.", time: "Closed" },
 ];
 
-/* `description` is the homepage card; `detail` is the section on /services/.
-   Both live here so the four offerings cannot drift apart between the two
-   pages, and `slug` is the anchor the services sub-nav jumps to.
-
-   Detail copy is condensed from the practice's previous site. Two deliberate
-   departures from that source, both flagged in the commit:
-
-   - The old Cosmetic page ran to roughly 1,200 words of claims that cosmetic
-     dentistry improves mood, marriages, career focus, weight loss and life
-     expectancy, each citing a popular-science article. Those are health
-     outcome claims a dental practice would have to substantiate, and they are
-     not what someone choosing a dentist is reading for. Cut to what the
-     practice actually does.
-   - The old Preventive page carried specific decay statistics with no source.
-     Repeating unsourced figures as fact is not worth the risk; the actionable
-     advice they introduced is kept. */
 /* ---- New patients ----
    The practice's old /new-patients/ page was not among the archived captures,
    so none of this is mirrored copy. Everything below is either grounded in
@@ -194,6 +179,122 @@ export const faqs = [
   },
 ];
 
+/* ---- Specials ----
+   One page with anchored sections rather than a page per offer: two of the
+   three do not yet have enough content to carry a page of their own, and thin
+   pages hurt more than they help. Invisalign is the one that will outgrow this
+   first, once before/after photography exists.
+
+   Several claims here need the practice to confirm terms before launch; those
+   carry `needsTerms` and render a visible badge. Advertised prices and savings
+   in dentistry are regulated -- Michigan's rules on misleading claims and the
+   FTC's substantiation expectations both apply -- so none of this should ship
+   with an unstated basis or an open-ended validity period. */
+export const specials = [
+  {
+    slug: "invisalign",
+    title: "Invisalign",
+    headline: "Up to $1,000 off",
+    lede: "The removable, smooth and comfortable way to correct misaligned teeth, at any age.",
+    body: [
+      "Invisalign straightens teeth with a series of clear, removable aligners rather than fixed brackets and wires. They come out to eat and to brush, and most people will not notice you are wearing them.",
+      "Meadowbrook Dental is offering Invisalign treatment at a substantially reduced rate. Dr. Soni is Invisalign certified and will tell you at a consultation whether it suits your case.",
+    ],
+    link: {
+      href: "https://www.invisalign.com/",
+      label: "Read more about Invisalign on the official site",
+    },
+    needsTerms: true,
+  },
+  {
+    slug: "zoom-whitening",
+    title: "Zoom Whitening",
+    headline: "$400 off",
+    lede: "Brighter, whiter teeth at an affordable price.",
+    body: [
+      "The package combines a single in-office Zoom session with custom take-home trays, so the result can be topped up rather than fading after one visit.",
+    ],
+    /* The components are stated separately because the figures supplied did
+       not reconcile: $499 + $199 is $698, against a quoted total of $699.
+       A dollar is trivial visually and not trivial in advertised pricing, so
+       the total is left off the page until the practice confirms it. */
+    priceLines: [
+      "$499 in-office Zoom session",
+      "$199 take-home custom trays",
+    ],
+    needsTerms: true,
+  },
+  {
+    slug: "in-office-plans",
+    title: "In-Office Plans",
+    headline: "No insurance? No problem.",
+    lede: "Affordable yearly plans for you and your family, so cost is not the reason care gets put off.",
+    body: [
+      "Our In-Office Plans cover professional cleanings and exams at a reduced rate, and take 20% off any other treatment you need during the year.",
+    ],
+    plans: [
+      {
+        name: "Kids Preventive Plan",
+        qualifier: "Under 14",
+        price: 225,
+        saving: "Saves over $250 a year",
+        includes: [
+          "2 professional standard dental cleanings",
+          "2 oral wellness examinations",
+          "1 set of digital X-rays (excludes panoramic)",
+          "1 fluoride treatment",
+          "20% off other dental treatments",
+        ],
+      },
+      {
+        name: "Adult Preventive Plan",
+        price: 275,
+        saving: "Saves over $350 a year",
+        includes: [
+          "2 professional standard dental cleanings",
+          "2 oral wellness examinations and oral cancer screening",
+          "1 set of digital X-rays (excludes panoramic)",
+          "20% off other dental treatments",
+        ],
+      },
+      {
+        name: "Adult Periodontal Plan",
+        price: 450,
+        saving: "Saves over $600 a year",
+        includes: [
+          "3 periodontal maintenance cleanings",
+          "2 oral wellness examinations and oral cancer screening",
+          "1 set of digital X-rays (excludes panoramic)",
+          "20% off other dental treatments",
+        ],
+      },
+    ],
+    /* Deliberate and, in most states, required in substance: a membership plan
+       that is described with "we've got you covered" alongside "no insurance"
+       can read as insurance, which it is not. Wording is worth a check with
+       whoever advises the practice. */
+    disclaimer:
+      "These are in-office membership plans, not dental insurance. They are an agreement directly with Meadowbrook Dental and do not provide insurance coverage.",
+    needsTerms: true,
+  },
+];
+
+/* `description` is the homepage card; `detail` is the section on /services/.
+   Both live here so the four offerings cannot drift apart between the two
+   pages, and `slug` is the anchor the services sub-nav jumps to.
+
+   Detail copy is condensed from the practice's previous site. Two deliberate
+   departures from that source, both flagged in the commit:
+
+   - The old Cosmetic page ran to roughly 1,200 words of claims that cosmetic
+     dentistry improves mood, marriages, career focus, weight loss and life
+     expectancy, each citing a popular-science article. Those are health
+     outcome claims a dental practice would have to substantiate, and they are
+     not what someone choosing a dentist is reading for. Cut to what the
+     practice actually does.
+   - The old Preventive page carried specific decay statistics with no source.
+     Repeating unsourced figures as fact is not worth the risk; the actionable
+     advice they introduced is kept. */
 export const services = [
   {
     slug: "family-dentistry",
