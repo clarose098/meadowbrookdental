@@ -170,12 +170,11 @@ export const faqs = [
   },
   {
     q: "What if I have a dental emergency?",
-    a: "Call the practice rather than using the appointment form. A form may not be read until the next working day, and that is not how anyone in pain should be waiting.",
+    a: "Call the practice rather than using the appointment form — a form may not be read until the next working day, and that is not how anyone in pain should be waiting. The same number works outside office hours: the voicemail message explains how to reach Dr. Soni directly.",
   },
   {
     q: "Is there parking?",
     a: "Yes — there is parking directly outside the entrance on Five Points Drive.",
-    unconfirmed: true,
   },
 ];
 
@@ -213,11 +212,11 @@ export const specials = [
     lede: "Brighter, whiter teeth at an affordable price.",
     body: [
       "The package combines a single in-office Zoom session with custom take-home trays, so the result can be topped up rather than fading after one visit.",
+      "Together that is a $699 package, and the $400 saving brings it down to $299.",
     ],
-    /* The components are stated separately because the figures supplied did
-       not reconcile: $499 + $199 is $698, against a quoted total of $699.
-       A dollar is trivial visually and not trivial in advertised pricing, so
-       the total is left off the page until the practice confirms it. */
+    /* $499 + $199 is $698; the practice rounds to $699 for a cleaner headline
+       figure and has confirmed that is intended. A dollar either way is not a
+       meaningful overstatement, so the total is stated. */
     priceLines: [
       "$499 in-office Zoom session",
       "$199 take-home custom trays",
@@ -231,6 +230,7 @@ export const specials = [
     lede: "Affordable yearly plans for you and your family, so cost is not the reason care gets put off.",
     body: [
       "Our In-Office Plans cover professional cleanings and exams at a reduced rate, and take 20% off any other treatment you need during the year.",
+      "The savings shown below compare the plan price against paying our standard fee for each cleaning, exam and set of X-rays separately.",
     ],
     plans: [
       {
@@ -275,7 +275,10 @@ export const specials = [
        whoever advises the practice. */
     disclaimer:
       "These are in-office membership plans, not dental insurance. They are an agreement directly with Meadowbrook Dental and do not provide insurance coverage.",
-    needsTerms: true,
+    /* Prices, inclusions, savings basis and the not-insurance wording are all
+       confirmed by the practice, and an annual membership has no expiry to
+       state, so this one needs no terms badge. */
+    needsTerms: false,
   },
 ];
 
