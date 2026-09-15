@@ -32,6 +32,12 @@ import { site, heroPhotos } from "../data/site";
         label="Photos of the practice"
         itemNoun="photo"
         count={heroPhotos.length}
+        /* 4s rather than 3: the captions run to about eight words, and three
+           seconds is not long enough to read one and take in the artwork
+           behind it. Only this carousel autoplays — the testimonials are
+           paragraphs of prose, and moving those under someone mid-sentence
+           would be actively hostile. */
+        autoplay={4000}
       >
         {
           heroPhotos.map((photo, i) => {

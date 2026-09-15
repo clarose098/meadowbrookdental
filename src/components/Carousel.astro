@@ -8,7 +8,13 @@
  * fails to load, the carousel degrades to a scrollable row rather than to a
  * stack of hidden content.
  *
- * Nothing here autoplays, so no pause control is required (WCAG 2.2.2).
+ * Autoplay is opt-in per carousel via `autoplay`, and brings obligations with
+ * it. WCAG 2.2.2 (Pause, Stop, Hide) is a Level A criterion: anything that
+ * moves automatically, runs longer than five seconds and sits alongside other
+ * content MUST have a mechanism to pause it. Hover and focus pausing do not
+ * satisfy that -- neither is available to someone reading on a touch screen,
+ * and neither is a control you can find. So a visible pause button is rendered
+ * whenever autoplay is on, and it is not optional decoration.
  */
 
 interface Props {
@@ -17,12 +23,23 @@ interface Props {
   /* What one slide is called, for button and dot labels: "photo", "review". */
   itemNoun: string;
   count: number;
+  /* Milliseconds between automatic advances. Omit for a static carousel.
+     Setting this also makes the carousel loop, so the arrows wrap rather than
+     disabling at the ends -- a looping slideshow whose Next button greys out
+     reads as broken. */
+  autoplay?: number;
 }
 
-const { id, label, itemNoun, count } = Astro.props;
+const { id, label, itemNoun, count, autoplay } = Astro.props;
 ---
 
-<div class="carousel" id={id} data-carousel data-noun={itemNoun}>
+<div
+  class="carousel"
+  id={id}
+  data-carousel
+  data-noun={itemNoun}
+  data-autoplay={autoplay}
+>
   <div
     class="carousel__viewport"
     role="group"
@@ -50,6 +67,29 @@ const { id, label, itemNoun, count } = Astro.props;
       <span class="visually-hidden">Previous {itemNoun}</span>
     </button>
 
+    <div class="carousel__center">
+      {autoplay && (
+        /* Rendered only when autoplay is on, and hidden again by the script if
+           the visitor prefers reduced motion -- there is nothing to pause in
+           that case, and a dead control is worse than none. */
+        <button
+          class="carousel__playpause"
+          type="button"
+          data-playpause
+          data-state="playing"
+        >
+          <svg class="icon-pause" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M8 5v14M16 5v14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+          </svg>
+          <svg class="icon-play" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M8 5l11 7-11 7Z" fill="currentColor" />
+          </svg>
+          <span class="visually-hidden" data-playpause-label>
+            Pause the slideshow
+          </span>
+        </button>
+      )}
+
     <ul class="carousel__dots" data-dots>
       {
         Array.from({ length: count }).map((_, i) => (
@@ -67,6 +107,7 @@ const { id, label, itemNoun, count } = Astro.props;
         ))
       }
     </ul>
+    </div>
 
     <button class="carousel__arrow" type="button" data-next>
       <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
@@ -164,6 +205,36 @@ const { id, label, itemNoun, count } = Astro.props;
     cursor: default;
   }
 
+  .carousel__center {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+  }
+
+  /* Same 44px target as the social chips and comfortably past the 24x24
+     minimum in 2.5.8. Smaller than the arrows because it is a secondary
+     control, but never hidden -- 2.2.2 needs it findable, not discoverable. */
+  .carousel__playpause {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    flex: none;
+    border-radius: 50%;
+    border: 1px solid currentColor;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+  }
+  .carousel__playpause svg {
+    width: 18px;
+    height: 18px;
+  }
+  .carousel__playpause[data-state="playing"] .icon-play,
+  .carousel__playpause[data-state="paused"] .icon-pause {
+    display: none;
+  }
+
   .carousel__dots {
     display: flex;
     gap: 6px;
@@ -213,6 +284,19 @@ const { id, label, itemNoun, count } = Astro.props;
       "(prefers-reduced-motion: reduce)",
     ).matches;
 
+    const playPause = root.querySelector<HTMLButtonElement>("[data-playpause]");
+    const playPauseLabel = root.querySelector<HTMLElement>(
+      "[data-playpause-label]",
+    );
+    /* Reduced motion switches autoplay off entirely rather than merely
+       shortening it. Someone who has asked the OS for less movement has not
+       asked for faster movement. */
+    const interval =
+      !reduceMotion && root.dataset.autoplay
+        ? Number(root.dataset.autoplay)
+        : 0;
+    const loop = interval > 0;
+
     let snapTimer: number | undefined;
 
     function restoreSnap() {
@@ -220,7 +304,9 @@ const { id, label, itemNoun, count } = Astro.props;
     }
 
     function go(to: number, announce = true) {
-      index = Math.max(0, Math.min(to, slides.length - 1));
+      index = loop
+        ? (to + slides.length) % slides.length
+        : Math.max(0, Math.min(to, slides.length - 1));
 
       // Measuring from slide 0 cancels out the track's padding and any
       // offsetParent difference, and accounts for the flex gap.
@@ -256,23 +342,106 @@ const { id, label, itemNoun, count } = Astro.props;
         if (i === index) dot.setAttribute("aria-current", "true");
         else dot.removeAttribute("aria-current");
       });
-      if (prev) prev.disabled = index === 0;
-      if (next) next.disabled = index === slides.length - 1;
+      if (!loop) {
+        if (prev) prev.disabled = index === 0;
+        if (next) next.disabled = index === slides.length - 1;
+      }
       if (announce && status) {
         status.textContent = `${noun} ${index + 1} of ${slides.length}`;
       }
     }
 
-    prev?.addEventListener("click", () => go(index - 1));
-    next?.addEventListener("click", () => go(index + 1));
-    dots.forEach((dot, i) => dot.addEventListener("click", () => go(i)));
+    /* ---- Autoplay ----
+       Only runs when `interval` is set and reduced motion is not requested. */
+    let timer: number | undefined;
+    let stopped = false;   // the visitor took over; do not restart on its own
+    let paused = false;    // transient: pointer over it, focus inside, tab hidden
+
+    function tick() {
+      /* announce: false. The live region exists so a manual change is spoken;
+         firing it every few seconds unprompted would make the page talk over
+         whatever someone was actually reading. */
+      go(index + 1, false);
+    }
+
+    function runTimer() {
+      window.clearInterval(timer);
+      if (interval && !stopped && !paused) {
+        timer = window.setInterval(tick, interval);
+      }
+    }
+
+    function setPaused(value: boolean) {
+      paused = value;
+      runTimer();
+    }
+
+    /* Hard stop, kept separate from the transient pause. Once someone has
+       chosen a slide themselves, pulling it away from them a few seconds later
+       is the single most irritating thing a carousel can do. */
+    function stopAutoplay() {
+      if (!interval || stopped) return;
+      stopped = true;
+      window.clearInterval(timer);
+      if (playPause) playPause.dataset.state = "paused";
+      if (playPauseLabel) playPauseLabel.textContent = "Play the slideshow";
+    }
+
+    if (interval) {
+      playPause?.addEventListener("click", () => {
+        if (stopped) {
+          stopped = false;
+          if (playPause) playPause.dataset.state = "playing";
+          if (playPauseLabel) playPauseLabel.textContent = "Pause the slideshow";
+          runTimer();
+        } else {
+          stopAutoplay();
+        }
+      });
+
+      /* Hover and focus are a courtesy on top of the button, not the mechanism
+         2.2.2 asks for -- neither exists on a touch screen. */
+      root.addEventListener("mouseenter", () => setPaused(true));
+      root.addEventListener("mouseleave", () => setPaused(false));
+      root.addEventListener("focusin", () => setPaused(true));
+      root.addEventListener("focusout", () => setPaused(false));
+
+      /* No point advancing slides nobody can see, and it avoids returning to a
+         tab that has silently moved on. */
+      document.addEventListener("visibilitychange", () =>
+        setPaused(document.hidden),
+      );
+
+      runTimer();
+    } else if (playPause) {
+      /* Autoplay is off because of reduced motion, so the control has nothing
+         to act on. */
+      playPause.hidden = true;
+    }
+
+    prev?.addEventListener("click", () => {
+      stopAutoplay();
+      go(index - 1);
+    });
+    next?.addEventListener("click", () => {
+      stopAutoplay();
+      go(index + 1);
+    });
+    dots.forEach((dot, i) =>
+      dot.addEventListener("click", () => {
+        stopAutoplay();
+        go(i);
+      }),
+    );
 
     track.addEventListener("keydown", (event) => {
       if (event.key === "ArrowLeft") {
         event.preventDefault();
+        stopAutoplay();
         go(index - 1);
       } else if (event.key === "ArrowRight") {
         event.preventDefault();
+        stopAutoplay();
         go(index + 1);
       }
     });

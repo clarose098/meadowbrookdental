@@ -102,15 +102,36 @@ its whole length. This is the only place the teal visibly shifts.
 
 Carousels are the most common source of accessibility complaints. Both must:
 
-- Not autoplay. If autoplay is added later, a visible pause control is required
-  (WCAG 2.2.2).
 - Use real `<button>` elements for prev/next and for the paginator dots, each
   with an `aria-label` ("Previous photo", "Go to slide 3").
 - Expose the active dot with `aria-current="true"`, not colour alone.
-- Announce slide changes through a `aria-live="polite"` region.
+- Announce slide changes through a `aria-live="polite"` region — but only for
+  changes the visitor asked for. An automatic advance passes `announce: false`,
+  because a live region firing every few seconds talks over whatever the person
+  was actually reading.
 - Be operable by keyboard, with a visible focus ring at 3:1 against its
   background.
 - Honour `prefers-reduced-motion` — handled globally in `tokens.css`.
+
+**Autoplay.** The hero carousel autoplays at 4s, added at the practice's
+request. The original rule here was "do not autoplay"; that has changed, and
+the conditions it came with are now requirements rather than advice:
+
+- A **visible pause button** is mandatory, not optional. WCAG 2.2.2 (Pause,
+  Stop, Hide) is Level A, and it applies to anything moving automatically for
+  more than five seconds alongside other content. Pausing on hover and focus
+  does not satisfy it — neither gesture exists on a touch screen, and neither
+  is a control anyone can find.
+- `prefers-reduced-motion` switches autoplay off completely rather than slowing
+  it, and the pause button hides with it, since a control with nothing to act
+  on is worse than no control.
+- Any deliberate interaction — arrow, dot or arrow key — stops autoplay for
+  good rather than pausing it. Taking a slide away from someone who just chose
+  it is the single most irritating thing a carousel can do.
+- Autoplay also pauses when the tab is hidden.
+- The testimonial carousel deliberately does **not** autoplay. Those slides are
+  paragraphs of prose, and moving them under someone mid-sentence is worse than
+  moving a picture.
 
 Build on CSS scroll-snap rather than a carousel library. Scroll-snap is
 keyboard- and screen-reader-accessible by default and degrades to a plain
