@@ -184,11 +184,9 @@ export const faqs = [
    pages hurt more than they help. Invisalign is the one that will outgrow this
    first, once before/after photography exists.
 
-   Several claims here need the practice to confirm terms before launch; those
-   carry `needsTerms` and render a visible badge. Advertised prices and savings
-   in dentistry are regulated -- Michigan's rules on misleading claims and the
-   FTC's substantiation expectations both apply -- so none of this should ship
-   with an unstated basis or an open-ended validity period. */
+   The practice confirmed all three offers run indefinitely, so no end dates
+   are stated. Every saving still says what it is measured against -- that
+   part is a substantiation matter, not a validity one, and stays. */
 export const specials = [
   {
     slug: "invisalign",
@@ -203,7 +201,6 @@ export const specials = [
       href: "https://www.invisalign.com/",
       label: "Read more about Invisalign on the official site",
     },
-    needsTerms: true,
   },
   {
     slug: "zoom-whitening",
@@ -221,7 +218,6 @@ export const specials = [
       "$499 in-office Zoom session",
       "$199 take-home custom trays",
     ],
-    needsTerms: true,
   },
   {
     slug: "in-office-plans",
@@ -275,10 +271,6 @@ export const specials = [
        whoever advises the practice. */
     disclaimer:
       "These are in-office membership plans, not dental insurance. They are an agreement directly with Meadowbrook Dental and do not provide insurance coverage.",
-    /* Prices, inclusions, savings basis and the not-insurance wording are all
-       confirmed by the practice, and an annual membership has no expiry to
-       state, so this one needs no terms badge. */
-    needsTerms: false,
   },
 ];
 
@@ -440,13 +432,13 @@ export const heroPhotos = [
     href: "/specials/#invisalign",
   },
   {
-    src: "/images/special-zoom-whitening.jpg",
+    src: "/images/special-zoom-whitening-v2.jpg",
     alt: "Brighter, whiter teeth at an affordable price. Save $400.",
     caption: "Learn more about Zoom whitening — save $400",
     href: "/specials/#zoom-whitening",
   },
   {
-    src: "/images/special-in-office-plans.jpg",
+    src: "/images/special-in-office-plans-v2.jpg",
     alt: "In-Office Plans. No insurance? No problem. Kids preventive plan $225 a year, adult preventive plan $275 a year, adult periodontal plan $450 a year.",
     caption: "Learn more about our In-Office Plans — from $225 a year",
     href: "/specials/#in-office-plans",

@@ -86,12 +86,6 @@ const jsonLd = {
           <div class="special__head">
             <h2 id={`${special.slug}-title`}>{special.title}</h2>
             <p class="special__headline">{special.headline}</p>
-            {special.needsTerms && (
-              <p class="special__terms">
-                <span class="placeholder-badge">Terms needed</span>
-                <span>End date and qualifying conditions still to confirm</span>
-              </p>
-            )}
           </div>
 
           <div class="special__copy">
@@ -244,14 +238,6 @@ const jsonLd = {
     color: var(--teal);
   }
 
-  .special__terms {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.6rem;
-    margin: 0.5rem 0 0;
-    font-size: var(--step-small);
-  }
 
   .special__copy {
     display: flex;
