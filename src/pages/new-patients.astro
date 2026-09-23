@@ -57,8 +57,10 @@ import {
                   One packet of {newPatientForms.formCount} forms. Fill it in
                   before you arrive and your first visit starts sooner.
                 </p>
+                {/* Format and size in the link text: a download that opens a
+                    290KB PDF should say so before it is clicked, not after. */}
                 <a class="btn btn--solid" href={newPatientForms.file} download>
-                  Download the packet
+                  Download the packet (PDF, {newPatientForms.fileSize})
                 </a>
               </>
             ) : (

@@ -127,10 +127,14 @@ export const newPatientSteps = [
 ];
 
 export const newPatientForms = {
-  /* Set this to e.g. "/forms/meadowbrook-new-patient-packet.pdf" once it
-     exists. Until then the block renders as plain text with a badge. */
-  file: null as string | null,
-  formCount: 5,
+  /* Null here renders the block as plain text with a badge instead of a link
+     to a file that does not exist. */
+  file: "/forms/meadowbrook-new-patient-packet.pdf" as string | null,
+  /* Four, not the five we were told: the packet contains a registration form,
+     a photography consent, a financial policy and a privacy-practices
+     acknowledgement, one per page. */
+  formCount: 4,
+  fileSize: "290 KB",
 };
 
 export const newPatientBring = [
