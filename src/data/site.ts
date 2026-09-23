@@ -134,7 +134,6 @@ export const newPatientForms = {
      a photography consent, a financial policy and a privacy-practices
      acknowledgement, one per page. */
   formCount: 4,
-  fileSize: "290 KB",
 };
 
 export const newPatientBring = [
